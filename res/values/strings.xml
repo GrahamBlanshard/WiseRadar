@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">WiseRadar</string>
+    
+    <!--  Site names -->
+    <string name="carvel">Carvel</string>
+    <string name="jimmy">Jimmy Lake</string>
+    <string name="schuler">Schuler</string>
+    <string name="spirit">Spirit River</string>
+    <string name="strathmore">Strathmore</string>
+    <string name="bethune">Bethune</string>
+    <string name="radisson">Radisson</string>
+    <string name="foxwarren">Foxwarren</string>
+    <string name="woodlands">Woodlands</string>
+    
+    
+    <string name="launchString">Go!</string>
+    <string name="gps">Use GPS</string>
+    <string name="radarText">Radar</string>
+    <string-array name="NameToCode">
+        <item>Carvel|whk</item>
+        <item>Jimmy Lake|whn</item>
+        <item>Schuler|xbu</item>
+        <item>Spirit River|www</item>
+        <item>Strathmore|xsm</item>
+        <item>Bethune|xbe</item>
+        <item>Radisson|xra</item>
+        <item>Foxwarren|xfw</item>
+        <item>Woodlands|xwl</item>        
+        <item>Use GPS|gps</item>
+    </string-array>
+    <string name="radarDesc">Current active radar image</string>
+    <item name="image_count" type="integer" format="integer">6</item>
+
+</resources>
