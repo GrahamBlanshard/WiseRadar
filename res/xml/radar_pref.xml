@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+				  android:key="radar_pref" >
+    	<ListPreference android:title="Radar Locations"
+    					android:key="pref_radar_code"
+    					android:entries="@array/radar_cities"
+    					android:entryValues="@array/radar_codes"
+    					android:summary="List of available Radar locations"
+    					android:defaultValue="gps">
+    	</ListPreference>
+</PreferenceScreen>

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">WiseRadar</string>
+    <string name="pick_title">WiseRadar - Pick a Radar</string>
     
     <!--  Site names -->
     <string name="carvel">Carvel</string>
@@ -17,6 +18,11 @@
     <string name="launchString">Go!</string>
     <string name="gps">Use GPS</string>
     <string name="radarText">Radar</string>
+    <string name="defaultRadar">Pick a Radar</string>
+    <string name="pickButton">Select New</string>
+    
+    
+    
     <string-array name="NameToCode">
         <item>Carvel|whk</item>
         <item>Jimmy Lake|whn</item>

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<!-- Radar location codes -->
+    <string-array name="radar_codes">
+    	<item>xsi</item>
+    	<item>wuj</item>
+    	<item>xpg</item>
+    	<item>xss</item>
+    	<item>whk</item>
+    	<item>whn</item>
+    	<item>xbu</item>
+    	<item>www</item>
+    	<item>xsm</item>
+    	<item>xbe</item>
+    	<item>xra</item>
+    	<item>xfw</item>
+    	<item>xwl</item> 
+    	<item>xdr</item>
+    	<item>xni</item>
+    	<item>wgj</item>
+    	<item>xti</item>
+    	<item>wbi</item>
+    	<item>wkr</item>
+    	<item>wso</item>
+    	<item>xft</item>
+    	<item>xla</item>
+    	<item>wmn</item>
+    	<item>wvy</item>
+    	<item>wmb</item>
+    	<item>xam</item>
+    	<item>xnc</item>
+    	<item>xgo</item>
+    	<item>xmb</item>
+    	<item>xme</item>
+    	<item>wtp</item>
+    	<item>gps</item>
+    </string-array>
+	<!-- Radar location names -->
+    <string-array name="radar_cities">
+    	<item>Victoria</item>
+    	<item>Aldergrove</item> 
+    	<item>Prince George</item>
+    	<item>Silver Star Mountain</item>
+    	<item>Carvel</item>
+    	<item>Jimmy Lake</item>
+    	<item>Schuler</item>
+    	<item>Spirit River</item>
+    	<item>Strathmore</item>
+    	<item>Bethune</item>
+    	<item>Radisson</item>
+    	<item>Foxwarren</item>
+    	<item>Woodlands</item> 
+    	<item>Dryden</item>
+    	<item>Superior West</item>
+    	<item>Montreal River</item> 
+    	<item>Northeast Ontario</item>
+    	<item>Britt</item> 
+    	<item>King City</item> 
+    	<item>Exeter</item> 
+		<item>Franktown</item> 
+    	<item>Landrienne</item> 
+		<item>McGill</item> 
+		<item>Villeroy</item> 
+		<item>Lac Castor</item> 
+		<item>Val d\'Irène</item> 
+    	<item>Chipman</item>
+    	<item>Halifax</item> 
+    	<item>Marion Bridge</item>
+    	<item>Marble Mountain</item> 
+		<item>Holyrood</item>
+		<item>Use GPS Sensor</item>
+	</string-array>
+	<!-- Provincial location codes -->
+	<string-array name="prov_codes">
+		<item>pac</item>
+		<item>wrn</item>
+		<item>wrn</item>
+		<item>wrn</item>
+		<item>ont</item>
+		<item>que</item>
+		<item>ern</item>
+		<item>ern</item>
+		<item>ern</item>
+	</string-array>
+	<!-- Provincial location names -->
+	<string-array name="prov_names">
+		<item>BC</item> 
+		<item>Alberta</item> 
+		<item>Saskatchewan</item>
+		<item>Manitoba</item> 
+		<item>Ontario</item> 
+		<item>Quebec</item> 
+		<item>New Brunswick</item> 
+		<item>Nova Scotia</item> 
+		<item>Newfoundland</item> 
+	</string-array>
+	
+</resources>

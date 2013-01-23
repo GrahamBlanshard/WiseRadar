@@ -9,7 +9,19 @@ package wiseguys.radar;
 
 public final class R {
     public static final class array {
-        public static final int NameToCode=0x7f050000;
+        public static final int NameToCode=0x7f050004;
+        /**  Provincial location codes 
+         */
+        public static final int prov_codes=0x7f050002;
+        /**  Provincial location names 
+         */
+        public static final int prov_names=0x7f050003;
+        /**  Radar location names 
+         */
+        public static final int radar_cities=0x7f050001;
+        /**  Radar location codes 
+         */
+        public static final int radar_codes=0x7f050000;
     }
     public static final class attr {
     }
@@ -17,45 +29,42 @@ public final class R {
         public static final int ic_launcher=0x7f020000;
     }
     public static final class id {
-        public static final int launchButton=0x7f070001;
-        public static final int menuTitleText=0x7f070000;
-        public static final int radar0=0x7f07000c;
-        public static final int radar1=0x7f070003;
-        public static final int radar2=0x7f070004;
-        public static final int radar3=0x7f070005;
-        public static final int radar4=0x7f070006;
-        public static final int radar5=0x7f070007;
-        public static final int radar6=0x7f070008;
-        public static final int radar7=0x7f070009;
-        public static final int radar8=0x7f07000a;
-        public static final int radar9=0x7f07000b;
-        public static final int radarGroupSelection=0x7f070002;
-        public static final int radarImage=0x7f07000e;
-        public static final int radarName=0x7f07000d;
+        public static final int launchButton=0x7f080001;
+        public static final int menuTitleText=0x7f080000;
+        public static final int prefButton=0x7f080003;
+        public static final int radarCodeText=0x7f080002;
+        public static final int radarImage=0x7f080005;
+        public static final int radarName=0x7f080004;
     }
     public static final class integer {
-        public static final int image_count=0x7f060000;
+        public static final int image_count=0x7f070000;
     }
     public static final class layout {
         public static final int menu=0x7f030000;
         public static final int radar=0x7f030001;
     }
     public static final class string {
-        public static final int app_name=0x7f040000;
-        public static final int bethune=0x7f040006;
+        public static final int app_name=0x7f060000;
+        public static final int bethune=0x7f060007;
         /**   Site names 
          */
-        public static final int carvel=0x7f040001;
-        public static final int foxwarren=0x7f040008;
-        public static final int gps=0x7f04000b;
-        public static final int jimmy=0x7f040002;
-        public static final int launchString=0x7f04000a;
-        public static final int radarDesc=0x7f04000d;
-        public static final int radarText=0x7f04000c;
-        public static final int radisson=0x7f040007;
-        public static final int schuler=0x7f040003;
-        public static final int spirit=0x7f040004;
-        public static final int strathmore=0x7f040005;
-        public static final int woodlands=0x7f040009;
+        public static final int carvel=0x7f060002;
+        public static final int defaultRadar=0x7f06000e;
+        public static final int foxwarren=0x7f060009;
+        public static final int gps=0x7f06000c;
+        public static final int jimmy=0x7f060003;
+        public static final int launchString=0x7f06000b;
+        public static final int pickButton=0x7f06000f;
+        public static final int pick_title=0x7f060001;
+        public static final int radarDesc=0x7f060010;
+        public static final int radarText=0x7f06000d;
+        public static final int radisson=0x7f060008;
+        public static final int schuler=0x7f060004;
+        public static final int spirit=0x7f060005;
+        public static final int strathmore=0x7f060006;
+        public static final int woodlands=0x7f06000a;
+    }
+    public static final class xml {
+        public static final int radar_pref=0x7f040000;
     }
 }

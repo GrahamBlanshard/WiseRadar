@@ -9,52 +9,35 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:textSize="25sp"
-        android:text="@string/app_name" />  
-    
+        android:text="@string/app_name"
+        android:textSize="25sp" />
+
     <Button
         android:id="@+id/launchButton"
         android:layout_width="160dip"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="40dp"
+        android:layout_marginBottom="38dp"
         android:text="@string/launchString" />
-    
-    <ScrollView
-        android:layout_below="@id/menuTitleText"
-        android:layout_above="@id/launchButton"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+
+    <TextView
+        android:id="@+id/radarCodeText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/menuTitleText"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="40dp" 
-        android:layout_marginBottom="40dp" >
-        
-        <LinearLayout 
-            android:orientation="vertical" 
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content" >
-            
-            <RadioGroup 
-                android:id="@+id/radarGroupSelection"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content">
-                
-                <RadioButton android:id="@+id/radar1" android:layout_width="wrap_content" android:layout_height="wrap_content" android:checked="true" android:text="@string/carvel" />   
-                <RadioButton android:id="@+id/radar2" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/jimmy" />
-                <RadioButton android:id="@+id/radar3" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/schuler" />
-                <RadioButton android:id="@+id/radar4" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/spirit" />
-                <RadioButton android:id="@+id/radar5" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/strathmore" />
-                <RadioButton android:id="@+id/radar6" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/bethune" />
-                <RadioButton android:id="@+id/radar7" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/radisson" />
-                <RadioButton android:id="@+id/radar8" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/foxwarren" />
-                <RadioButton android:id="@+id/radar9" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/woodlands" />                   
-                <RadioButton android:id="@+id/radar0" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/gps" />
-                
-            </RadioGroup>
-            
-            
-        </LinearLayout>
-    </ScrollView>
+        android:layout_marginTop="72dp"
+        android:text="@string/defaultRadar"
+        android:textSize="25sp" />
+
+    <Button
+        android:id="@+id/prefButton"
+        android:layout_width="160dip"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/launchButton"
+        android:layout_below="@+id/radarCodeText"
+        android:layout_marginTop="24dp"
+        android:text="@string/pickButton" />
 
 </RelativeLayout>
