@@ -1,12 +1,11 @@
 package wiseguys.radar.ui;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import wiseguys.radar.ImageFetcher;
 import wiseguys.radar.R;
+import wiseguys.radar.RadarHelper;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -14,13 +13,13 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 public class RadarActivity extends Activity {
 	
-	private Map<String,String> codeMap;
 	private ImageFetcher imgFetch;
 
 	/** Called when the activity is first created. */
@@ -28,19 +27,7 @@ public class RadarActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.radar);
-        
-        /**
-         * Shared Preferences -- Needed to pass data between activities.
-         */
-        SharedPreferences settings = getSharedPreferences("APP_PREFS", 0);
-        SharedPreferences.Editor spEditor = settings.edit();
-        spEditor.putString("APP_NAME", "WiseRadar v0.1");
-        spEditor.commit();
         imgFetch = ImageFetcher.getImageFetcher();
-        parseCodeArray();
-        
-        
-        //TODO:: TItle is the code and not the radar site name
     }
     
     /**
@@ -66,16 +53,19 @@ public class RadarActivity extends Activity {
     protected void onResume() {
     	super.onResume();
     	List<Bitmap> images = new ArrayList<Bitmap>();
+    	
+    	//Set the radar's title
 	    Bundle bundle = getIntent().getExtras();
-	    TextView radarTextName = (TextView)findViewById(R.id.radarName);
-	    String radarName = bundle.getString("radarCode");
-	    radarTextName.setText(radarName);   
-	    String code = codeMap.get(radarName);
-	    
-	    //TODO: Temp fix
+	    String code = bundle.getString("radarCode");
+
 	    if (code == null) {
-	    	code = "xbe";
+	    	Log.e("RadarActivity","System error -- No code passed to activity");
+	    	code = "xbe"; //TODO: Temp fix
 	    }
+	    String radarName = RadarHelper.codeToName(code,this.getBaseContext());
+	    TextView radarTextName = (TextView)findViewById(R.id.radarName);
+	    radarTextName.setText(radarName);   
+
 	    
 	    //Check if we need GPS or not
 	    if (!code.equals("gps")) { //No GPS
@@ -117,20 +107,7 @@ public class RadarActivity extends Activity {
         return false;
     }
     
-    
-    private void parseCodeArray() {
-    	codeMap = new HashMap<String, String>();
-    	String[] codeMaps = getResources().getStringArray(R.array.NameToCode);
-    	
-    	for (String s : codeMaps) {
-    		String key = s.substring(0, s.indexOf('|'));
-    		String val = s.substring(s.indexOf('|')+1);
-    	
-    		codeMap.put(key, val);
-    	}
-    }
-    
     private String matchGPS() {
-    	return "xbe";	//TODO: Update to real GPS use
+    	return "xbe";	//TODO: Update to real GPS use eventually
     }
 }
