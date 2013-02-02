@@ -5,6 +5,8 @@ import android.util.Log;
 
 public class RadarHelper {
 	
+	public static final String baseURL = "http://www.weatheroffice.gc.ca";
+	
 	public static String codeToName(String code, Context systemContext) {
 		//Test to make sure we're ready to accept it
 		if (systemContext == null) {

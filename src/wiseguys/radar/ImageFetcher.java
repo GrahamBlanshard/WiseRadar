@@ -11,7 +11,6 @@ import android.util.Log;
 public class ImageFetcher {
 	
 	private static ImageFetcher imgFetch;
-	private final String baseAddress = "http://www.weatheroffice.gc.ca";	
 	private SourceParser parser;
 	private SourceFetcherThread htmlFetch;
 	private List<Bitmap> latestImages = null;
@@ -81,18 +80,15 @@ public class ImageFetcher {
 				
 		radarImgUrls = parser.parseRadarImages();
 		
-		while (radarImgUrls.contains("|")) {
-			String imageURL = baseAddress + radarImgUrls.substring(0, radarImgUrls.indexOf('|'));
+		while (radarImgUrls.contains("|")) {	
+			String imageURL = radarImgUrls.substring(0, radarImgUrls.indexOf('|'));
+			Bitmap newImage = getImage(imageURL);
 			
-			ImageDownloaderThread imgDown = new ImageDownloaderThread(imageURL);
-			imgDown.start();
-			try {
-				imgDown.join();
-			} catch (InterruptedException ie) {
-				Log.e("ImageFetcher", "Error: " + ie);
-				return latestImages;
+			if (newImage == null) {
+				return latestImages; //We failed. Return last set
+			} else {
+				images.add(newImage);
 			}
-			images.add((Bitmap)imgDown.getImage());
 			
 			if (radarImgUrls.length() > 1) {
 				radarImgUrls = radarImgUrls.substring(radarImgUrls.indexOf('|')+1);
@@ -102,5 +98,22 @@ public class ImageFetcher {
 		}		
 		latestImages = images;
 		return images;
+	}
+	
+	/**
+	 * Fetches image at the given URL
+	 * @param URL URL of image
+	 * @return Bitmap of image from URL
+	 */
+	public Bitmap getImage(String URL) {
+		ImageDownloaderThread imgDown = new ImageDownloaderThread(RadarHelper.baseURL + URL);
+		imgDown.start();
+		try {
+			imgDown.join();
+		} catch (InterruptedException ie) {
+			Log.e("ImageFetcher", "Error: " + ie);
+			return null;
+		}
+		return (Bitmap)imgDown.getImage();
 	}
 }

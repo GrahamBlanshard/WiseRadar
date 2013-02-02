@@ -12,6 +12,8 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 
+import wiseguys.radar.RadarHelper;
+
 import android.util.Log;
 
 public class SourceFetcherThread extends Thread {
@@ -54,7 +56,7 @@ public class SourceFetcherThread extends Thread {
 	{
 	    HttpClient httpClient = new DefaultHttpClient();
 	    HttpContext localContext = new BasicHttpContext();
-	    HttpGet httpGet = new HttpGet("http://www.weatheroffice.gc.ca/radar/index_e.html?id=" + code);
+	    HttpGet httpGet = new HttpGet(RadarHelper.baseURL + "/radar/index_e.html?id=" + code);
 	    HttpResponse response = httpClient.execute(httpGet, localContext);
 	    StringBuilder result = new StringBuilder();
 

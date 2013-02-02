@@ -2,11 +2,33 @@
 
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
 				  android:key="radar_pref" >
-    	<ListPreference android:title="Radar Locations"
+		<PreferenceCategory android:title="Radar">
+    		<ListPreference android:title="Radar Locations"
     					android:key="pref_radar_code"
     					android:entries="@array/radar_cities"
     					android:entryValues="@array/radar_codes"
     					android:summary="List of available Radar locations"
     					android:defaultValue="gps">
-    	</ListPreference>
+    		</ListPreference>
+    	</PreferenceCategory>
+    	<PreferenceCategory android:title="Overlays">
+    		<CheckBoxPreference android:title="Show Roads"
+    					android:key="roads">
+    		</CheckBoxPreference>
+    		<CheckBoxPreference android:title="Show Road Numbers"
+    					android:key="roadNums">
+    		</CheckBoxPreference>
+    		<CheckBoxPreference android:title="Show Towns"
+    					android:key="towns">
+    		</CheckBoxPreference>
+    		<CheckBoxPreference android:title="Show Additional Towns"
+    					android:key="addTowns">
+    		</CheckBoxPreference>    		
+    		<CheckBoxPreference android:title="Show Rivers"
+    					android:key="rivers">
+    		</CheckBoxPreference>
+    		<CheckBoxPreference android:title="Show Radar Circles"
+    					android:key="circles">
+    		</CheckBoxPreference>    		
+    	</PreferenceCategory>
 </PreferenceScreen>

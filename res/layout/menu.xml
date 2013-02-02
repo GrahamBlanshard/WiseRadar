@@ -12,15 +12,6 @@
         android:text="@string/app_name"
         android:textSize="25sp" />
 
-    <Button
-        android:id="@+id/launchButton"
-        android:layout_width="160dip"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="38dp"
-        android:text="@string/launchString" />
-
     <TextView
         android:id="@+id/radarCodeText"
         android:layout_width="wrap_content"
@@ -32,12 +23,20 @@
         android:textSize="25sp" />
 
     <Button
+        android:id="@+id/launchButton"
+        android:layout_width="160dip"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/radarCodeText"
+        android:layout_centerHorizontal="true"
+        android:text="@string/launchString" />
+
+    <Button
         android:id="@+id/prefButton"
         android:layout_width="160dip"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/launchButton"
-        android:layout_below="@+id/radarCodeText"
-        android:layout_marginTop="24dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="67dp"
         android:text="@string/pickButton" />
 
 </RelativeLayout>

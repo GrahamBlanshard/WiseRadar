@@ -103,7 +103,20 @@ public class MenuActivity extends Activity {
 	private void loadRadar(View v) {
 		Intent myIntent = new Intent(v.getContext(), RadarActivity.class);
 		String radarCode = sharedPrefs.getString("pref_radar_code", "gps");
+	    Boolean showRoads = sharedPrefs.getBoolean("roads",false);
+	    Boolean showTowns = sharedPrefs.getBoolean("towns",false);
+	    Boolean showRadarCircles = sharedPrefs.getBoolean("circles",false);
+	    Boolean showRoadNums = sharedPrefs.getBoolean("roadNums",false);
+	    Boolean showAddTowns = sharedPrefs.getBoolean("addTowns",false);
+	    Boolean showRivers = sharedPrefs.getBoolean("rivers",false);
+		
 		myIntent.putExtra("radarCode", radarCode);
+		myIntent.putExtra("showRoads", showRoads);
+		myIntent.putExtra("showTowns", showTowns);
+		myIntent.putExtra("showRoadNumbers", showRoadNums);
+		myIntent.putExtra("showAdditionalTowns", showAddTowns);
+		myIntent.putExtra("showRivers", showRivers);
+		myIntent.putExtra("showRadarCircles", showRadarCircles);
         startActivityForResult(myIntent, 0);
 	}
 }

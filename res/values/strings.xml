@@ -8,6 +8,6 @@
     <string name="gps">Use GPS</string>
     <string name="radarText">Radar</string>
     <string name="defaultRadar">Pick a Radar</string>
-    <string name="pickButton">Change</string>
+    <string name="pickButton">Change Preferences</string>
     <string name="radarDesc">Current active radar image</string>
 </resources>
