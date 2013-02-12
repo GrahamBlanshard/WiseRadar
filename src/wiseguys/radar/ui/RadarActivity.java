@@ -14,8 +14,11 @@ import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -126,8 +129,18 @@ public class RadarActivity extends Activity {
 	    
 	    overlay = combine(overlays);
 	    
-	    sImage.setImageBitmap(overlay);
-	    sImage.setBackgroundDrawable(anim);
+	    //sImage.setImageBitmap(overlay);
+	    //sImage.setBackgroundDrawable(anim);
+	    
+	    Drawable[] layering = new Drawable[2];
+	    BitmapDrawable overlayBitmap = new BitmapDrawable(getResources(),overlay);
+	    layering[0] = anim;
+	    layering[1] = overlayBitmap;
+	    LayerDrawable layers = new LayerDrawable(layering);
+	    int calculatedOffset = images.get(0).getWidth() - overlay.getWidth();
+	    layers.setLayerInset(1, 0, 0, calculatedOffset, 0);
+	    sImage.setImageDrawable(layers);
+	    
 	    anim.setOneShot(false);
 	    anim.start();
     }
