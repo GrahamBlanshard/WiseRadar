@@ -26,6 +26,4 @@ public class SourceParser {
 		
 		return images;
 	}
-	
-	
 }

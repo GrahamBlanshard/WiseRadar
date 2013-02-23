@@ -19,11 +19,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        
-        
-        <activity android:name="wiseguys.radar.ui.RadarActivity"
-            	  android:label="@string/radarText" >
-        </activity>
+
         <activity android:label="@string/pick_title"
         		  android:name=".ui.PrefActivity">
         </activity>

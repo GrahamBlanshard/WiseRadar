@@ -1,13 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">WiseRadar</string>
-    <string name="pick_title">WiseRadar - Pick a Radar</string>
-    <string name="version">v0.2</string>
-    
-    <string name="launchString">Go!</string>
-    <string name="gps">Use GPS</string>
-    <string name="radarText">Radar</string>
-    <string name="defaultRadar">Pick a Radar</string>
+    <string name="version">v0.3</string>
     <string name="pickButton">Change Preferences</string>
     <string name="radarDesc">Current active radar image</string>
+    <string name="refresh">Refresh</string>
+    <string name="pick_title">Pick a Radar</string>
 </resources>
