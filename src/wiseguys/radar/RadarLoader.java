@@ -27,10 +27,12 @@ public class RadarLoader extends AsyncTask<String, String, LayerDrawable> {
 	private ImageView sImage;
 	private TextView name;
 	private String originalName;
+	private AnimationDrawable anim;
 	
 	public RadarLoader(Context c, Resources r, ImageView sImage, TextView name) {
 		context = c;
 		resources = r;
+		anim = null;
 		this.sImage = sImage;
 		this.name = name;
 		this.originalName = name.getText().toString();
@@ -70,7 +72,7 @@ public class RadarLoader extends AsyncTask<String, String, LayerDrawable> {
 	    publishProgress("Images received");
 	    
 	    //Drop Images into an animation
-	    AnimationDrawable anim = new AnimationDrawable();
+	    anim = new AnimationDrawable();
 	    
 	    if (!imgFetch.finished()) {
 	    	Log.w("WiseRadar","Fetching images was interrupted early");
@@ -98,9 +100,6 @@ public class RadarLoader extends AsyncTask<String, String, LayerDrawable> {
 	    
 	    layers.setLayerInset(1, 0, 0, calculatedOffset, 0);
 	    
-	    anim.setOneShot(false);
-	    anim.start();
-	    
 	    publishProgress("Finishing");
 	    
 	    return layers;
@@ -119,6 +118,9 @@ public class RadarLoader extends AsyncTask<String, String, LayerDrawable> {
 		
 		sImage.setImageDrawable(result);
 		name.setText(originalName);
+		
+	    anim.setOneShot(false);
+	    anim.start();
 	}
 	
 	@Override
