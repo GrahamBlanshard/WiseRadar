@@ -1,6 +1,7 @@
 package wiseguys.radar;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import wiseguys.radar.conn.ImageDownloaderThread;
@@ -21,11 +22,13 @@ public class ImageFetcher {
 	private List<Bitmap> latestImages = null;
 	private boolean finished;
 	private boolean failedPreviously;
+	private Date lastUpdate;
 	/**
 	 * Singleton constructor
 	 */
 	private ImageFetcher() {	
 		failedPreviously = false;
+		
 	}
 	
 	/**
@@ -46,7 +49,8 @@ public class ImageFetcher {
 	 */
 	private boolean setupFetch(String code) {
 		if (htmlFetch != null) {
-			if (htmlFetch.getCode().equals(code) && !failedPreviously) {
+			//Skip update when we are looking at the same radar which hasn't seen an update in 10 minutes, or last attempt had failed
+			if (htmlFetch.getCode().equals(code) && timeToUpdate() && !failedPreviously) {
 				return false;
 			} else {
 				return getRadarFromConnection(code);
@@ -111,6 +115,7 @@ public class ImageFetcher {
 		failedPreviously = false;
 		finished = true;
 		latestImages = images;
+		lastUpdate = new Date();
 		return images;
 	}
 	
@@ -239,5 +244,14 @@ public class ImageFetcher {
      */
     public boolean finished() {
     	return finished;
+    }
+    
+    private boolean timeToUpdate() {
+    	if (lastUpdate != null) {
+    		Date now = new Date();
+        	return (now.getTime() - lastUpdate.getTime()) >= 600000;
+    	}
+    	
+    	return true;    		
     }
 }
