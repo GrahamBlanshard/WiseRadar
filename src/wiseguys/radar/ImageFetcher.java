@@ -50,7 +50,7 @@ public class ImageFetcher {
 	private boolean setupFetch(String code) {
 		if (htmlFetch != null) {
 			//Skip update when we are looking at the same radar which hasn't seen an update in 10 minutes, or last attempt had failed
-			if (htmlFetch.getCode().equals(code) && timeToUpdate() && !failedPreviously) {
+			if (htmlFetch.getCode().equals(code) && !timeToUpdate() && !failedPreviously) {
 				return false;
 			} else {
 				return getRadarFromConnection(code);
