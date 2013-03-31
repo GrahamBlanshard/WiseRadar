@@ -20,6 +20,7 @@ import android.widget.TextView;
 public class RadarLoader extends AsyncTask<String, String, LayerDrawable> {
 
 	private String selectedRadarCode;
+	private String selectedDuration;
 	private ImageFetcher imgFetch;
 	private SharedPreferences sharedPrefs;
 	private Context context;
@@ -42,6 +43,7 @@ public class RadarLoader extends AsyncTask<String, String, LayerDrawable> {
 	@Override
 	protected LayerDrawable doInBackground(String... radarCode) {
 		selectedRadarCode = radarCode[0];
+		selectedDuration = radarCode[1];
 		
 		return loadRadar();
 	}
@@ -56,7 +58,7 @@ public class RadarLoader extends AsyncTask<String, String, LayerDrawable> {
 		List<Bitmap> images = new ArrayList<Bitmap>();
 	    
 	    if (selectedRadarCode == null) {
-	    	Log.e("RadarActivity","System error -- No code radar code selected from preferences, default failed.");
+	    	Log.e("WiseRadar","System error -- No code radar code selected from preferences, default failed.");
 	    	selectedRadarCode = "xbe"; //TODO: Temp fix
 	    }
 	    
@@ -64,9 +66,15 @@ public class RadarLoader extends AsyncTask<String, String, LayerDrawable> {
 	       
 	    //Check if we need GPS or not
 	    if (!selectedRadarCode.equals("gps")) { //No GPS
-	    	images = imgFetch.getRadarImages(selectedRadarCode);
+	    	images = imgFetch.getRadarImages(selectedRadarCode,selectedDuration);
 	    } else { //GPS
 	    	images = matchGPS();
+	    }
+	    
+	    if (images == null) {
+	    	Log.e("WiseRadar","System error -- No images were received. Likely due to Environment Canada not having any available data.");
+	    	publishProgress("Image fetch failed");
+	    	return null;
 	    }
 	    
 	    publishProgress("Images received");
@@ -106,14 +114,19 @@ public class RadarLoader extends AsyncTask<String, String, LayerDrawable> {
 	}
 	
 	private List<Bitmap> matchGPS() {
-    	return imgFetch.getRadarImages(selectedRadarCode);	//TODO: Update to real GPS use eventually
+    	return imgFetch.getRadarImages(selectedRadarCode,selectedDuration);	//TODO: Update to real GPS use eventually
     }
 	
 	@Override
 	protected void onPostExecute (LayerDrawable result) {
 		
 		if (result == null) {
-			name.setText("ERROR");
+			name.setText("Update Failed.");
+			
+			//Back out of updates if we don't have a running animated object
+			if (anim == null) {
+				return;
+			}
 		}
 		
 		sImage.setImageDrawable(result);

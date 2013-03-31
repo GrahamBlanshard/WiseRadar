@@ -19,6 +19,7 @@ public class MenuActivity extends Activity {
 	
 	private SharedPreferences sharedPrefs;
 	private String selectedRadarCode;
+	private String selectedDuration;
 	private RadarLoader loader;
 	
     /** Called when the activity is first created. */
@@ -87,6 +88,7 @@ public class MenuActivity extends Activity {
     	checkAndCancelUpdate();
     	
         selectedRadarCode = sharedPrefs.getString("pref_radar_code", "Pick a Radar");
+        selectedDuration = sharedPrefs.getString("pref_radar_dur", "short");
         TextView radarName = (TextView)findViewById(R.id.radarName);
               
         String selectedRadarName = RadarHelper.codeToName(selectedRadarCode,this.getBaseContext());
@@ -96,7 +98,7 @@ public class MenuActivity extends Activity {
 	    ImageView sImage = (ImageView)findViewById(R.id.radarImage);
         
         loader = new RadarLoader(this.getBaseContext(),this.getResources(),sImage,radarName);
-        loader.execute(selectedRadarCode);
+        loader.execute(selectedRadarCode,selectedDuration);
     }
     
     /**

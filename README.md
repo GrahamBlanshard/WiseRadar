@@ -17,5 +17,5 @@ NOTE: As per agreement with WeatherOffice.gc.ca all data used within this app is
 	  
 PLANNED CHANGES:  
 :	- Add the GPS functionality  
-:	- Add functionality to view 3hr plots (default/only option now is 1hr)  
 :	- Pinch-zoom functionality
+:	- Essential menu functions (Appropriate disclaimer, etc.)

@@ -47,16 +47,16 @@ public class ImageFetcher {
 	 * @param code
 	 * @return
 	 */
-	private boolean setupFetch(String code) {
+	private boolean setupFetch(String code, String duration) {
 		if (htmlFetch != null) {
 			//Skip update when we are looking at the same radar which hasn't seen an update in 10 minutes, or last attempt had failed
 			if (htmlFetch.getCode().equals(code) && !timeToUpdate() && !failedPreviously) {
 				return false;
 			} else {
-				return getRadarFromConnection(code);
+				return getRadarFromConnection(code,duration);
 			}
 		}  else {			
-			return getRadarFromConnection(code);
+			return getRadarFromConnection(code,duration);
 		}
 	}
 	
@@ -65,9 +65,10 @@ public class ImageFetcher {
 	 * @param code
 	 * @return
 	 */
-	private boolean getRadarFromConnection(String code) {
+	private boolean getRadarFromConnection(String code,String duration) {
 		htmlFetch = new SourceFetcherThread();
 		htmlFetch.setCode(code);
+		htmlFetch.setDuration(duration);
 		htmlFetch.start();
 		
 		try {
@@ -82,18 +83,23 @@ public class ImageFetcher {
 		return true;
 	}
 
-	public List<Bitmap> getRadarImages(String code) {
+	public List<Bitmap> getRadarImages(String code, String duration) {
 		
 		finished = false;
 		List<Bitmap> images = new ArrayList<Bitmap>();
 		String radarImgUrls = null;
 		
-		if (!setupFetch(code)) {
+		if (!setupFetch(code,duration)) {
 			finished = true;
 			return latestImages;
 		}
 				
 		radarImgUrls = parser.parseRadarImages();
+		
+		//Source parsing failed; likely due to a lack of images provided from the host
+		if (radarImgUrls == null) {
+			return latestImages;
+		}
 		
 		while (radarImgUrls.contains("|")) {	
 			String imageURL = radarImgUrls.substring(0, radarImgUrls.indexOf('|'));
@@ -246,6 +252,10 @@ public class ImageFetcher {
     	return finished;
     }
     
+    /**
+     * Check the time, skip update if we have not surpassed 10 minutes (interval of which Env. Canada updates)
+     * @return True if its time to update the radar
+     */
     private boolean timeToUpdate() {
     	if (lastUpdate != null) {
     		Date now = new Date();
