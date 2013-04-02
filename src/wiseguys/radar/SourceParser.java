@@ -22,7 +22,7 @@ public class SourceParser {
 		temp = temp.substring(0,temp.indexOf("</div>"));
 		
 		//At times, the Env. Canada page does not have available data
-		if (!temp.contains("li")) {
+		if (!temp.contains("<li>")) {
 			return null;
 		}	
 		
