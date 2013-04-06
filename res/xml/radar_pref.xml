@@ -11,6 +11,20 @@
     					android:defaultValue="gps">
     		</ListPreference>
     	</PreferenceCategory>
+    	<PreferenceCategory android:title="GPS">
+    		<CheckBoxPreference android:title="Use GPS"
+    					android:key="gps">
+    		</CheckBoxPreference>
+    	</PreferenceCategory>
+    	<PreferenceCategory android:title="Duration">
+    		<ListPreference android:title="Duration Options"
+    					android:key="pref_radar_dur"
+    					android:entries="@array/radar_durs"
+    					android:entryValues="@array/radar_dur_vals"
+    					android:summary="Duration options"
+    					android:defaultValue="short">
+    		</ListPreference>
+    	</PreferenceCategory>
     	<PreferenceCategory android:title="Overlays">
     		<CheckBoxPreference android:title="Show Roads"
     					android:key="roads">

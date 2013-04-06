@@ -17,7 +17,6 @@ import android.util.Log;
 public class ImageFetcher {
 	
 	private static ImageFetcher imgFetch;
-	private SourceParser parser;
 	private SourceFetcherThread htmlFetch;
 	private List<Bitmap> latestImages = null;
 	private boolean finished;
@@ -79,7 +78,6 @@ public class ImageFetcher {
 			return false;
 		}
 		
-		parser = new SourceParser(htmlFetch.getSource());			
 		return true;
 	}
 
@@ -87,34 +85,27 @@ public class ImageFetcher {
 		
 		finished = false;
 		List<Bitmap> images = new ArrayList<Bitmap>();
-		String radarImgUrls = null;
+		List<String> radarImgUrls = null;
 		
 		if (!setupFetch(code,duration)) {
 			finished = true;
 			return latestImages;
 		}
 				
-		radarImgUrls = parser.parseRadarImages();
+		radarImgUrls = RadarHelper.parseRadarImages(htmlFetch.getSource());
 		
 		//Source parsing failed; likely due to a lack of images provided from the host
 		if (radarImgUrls == null) {
 			return latestImages;
 		}
 		
-		while (radarImgUrls.contains("|")) {	
-			String imageURL = radarImgUrls.substring(0, radarImgUrls.indexOf('|'));
+		for (String imageURL : radarImgUrls) {
 			Bitmap newImage = getImage(imageURL);
 			
 			if (newImage == null) {
 				return latestImages; //We failed. Return last set
 			} else {
 				images.add(newImage);
-			}
-			
-			if (radarImgUrls.length() > 1) {
-				radarImgUrls = radarImgUrls.substring(radarImgUrls.indexOf('|')+1);
-			} else {
-				break;
 			}
 		}		
 		
@@ -259,7 +250,7 @@ public class ImageFetcher {
     private boolean timeToUpdate() {
     	if (lastUpdate != null) {
     		Date now = new Date();
-        	return (now.getTime() - lastUpdate.getTime()) >= 600000;
+        	return (now.getTime() - lastUpdate.getTime()) >= RadarHelper.TEN_MINUTES;
     	}
     	
     	return true;    		

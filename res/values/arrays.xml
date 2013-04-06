@@ -33,7 +33,6 @@
     	<item>xmb</item>
     	<item>xme</item>
     	<item>wtp</item>
-    	<item>gps</item>
     </string-array>
 	<!-- Radar location names -->
     <string-array name="radar_cities">
@@ -68,7 +67,6 @@
     	<item>Marion Bridge</item>
     	<item>Marble Mountain</item> 
 		<item>Holyrood</item>
-		<item>Use GPS Sensor</item>
 	</string-array>
 	<!-- Provincial location codes -->
 	<string-array name="prov_codes">
@@ -94,5 +92,80 @@
 		<item>Nova Scotia</item> 
 		<item>Newfoundland</item> 
 	</string-array>
+	<string-array name="radar_durs">
+		<item>Short - 1hr</item>
+		<item>Long - 3hrs</item>
+	</string-array>
+	<string-array name="radar_dur_vals">
+		<item>short</item>
+		<item>long</item>
+	</string-array>
+	<string-array name="city_lat_vals">
+		<item>48.428421</item>
+		<item>49.058052</item>
+		<item>53.917064</item>
+		<item>50.369444</item>
+		<item>53.531212</item>
+		<item>53.253406</item>
+		<item>50.339063</item>
+		<item>55.781944</item>
+		<item>51.037852</item>
+		<item>50.710118</item>
+		<item>52.460621</item>
+		<item>50.52042</item>
+		<item>50.206878</item>
+		<item>49.780094</item>
+		<item>49.020047</item>
+		<item>47.240471</item>
+		<item>49.285485</item>
+		<item>45.774835</item>
+		<item>43.92869</item>
+		<item>43.345751</item>
+		<item>45.045307</item>
+		<item>48.55</item>
+		<item>45.503107</item>
+		<item>46.387991</item>
+		<item>46.366898</item>
+		<item>48.465849</item>
+		<item>46.172101</item>
+		<item>44.648863</item>
+		<item>45.980573</item>
+		<item>53.135509</item>
+		<item>47.384965</item>
+	</string-array>
+	<string-array name="city_long_vals">
+		<item>-123.365644</item>
+		<item>-122.470667</item>
+		<item>-122.749669</item>
+		<item>-119.063611</item>
+		<item>-114.220678</item>
+		<item>-106.866269</item>
+		<item>-110.096425</item>
+		<item>-118.833889</item>
+		<item>-113.400287</item>
+		<item>-105.205449</item>
+		<item>-107.395367</item>
+		<item>-101.154059</item>
+		<item>-97.660232</item>
+		<item>-92.836959</item>
+		<item>-88.341236</item>
+		<item>-84.636787</item>
+		<item>-81.686096</item>
+		<item>-80.556459</item>
+		<item>-79.528143</item>
+		<item>-81.479927</item>
+		<item>-76.066877</item>
+		<item>-77.95</item>
+		<item>-73.576201</item>
+		<item>-71.875073</item>
+		<item>-74.879796</item>
+		<item>-67.575349</item>
+		<item>-65.877839</item>
+		<item>-63.57532</item>
+		<item>-60.212696</item>
+		<item>-57.660436</item>
+		<item>-53.124654</item>
+	</string-array>	
+	
 	
 </resources>

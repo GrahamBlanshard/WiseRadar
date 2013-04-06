@@ -11,7 +11,11 @@ import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.ImageView;
@@ -57,23 +61,18 @@ public class RadarLoader extends AsyncTask<String, String, LayerDrawable> {
 		imgFetch = ImageFetcher.getImageFetcher();
 		List<Bitmap> images = new ArrayList<Bitmap>();
 	    
-	    if (selectedRadarCode == null) {
-	    	Log.e("WiseRadar","System error -- No code radar code selected from preferences, default failed.");
-	    	selectedRadarCode = "xbe"; //TODO: Temp fix
+		if (selectedRadarCode == null) {
+	    	Log.e("WiseRadar","System error -- No code radar code selected from preferences, default failed.");	    	
+	    	return null;
 	    }
 	    
 	    publishProgress("Fetching images");
-	       
-	    //Check if we need GPS or not
-	    if (!selectedRadarCode.equals("gps")) { //No GPS
-	    	images = imgFetch.getRadarImages(selectedRadarCode,selectedDuration);
-	    } else { //GPS
-	    	images = matchGPS();
-	    }
+	    
+	    images = imgFetch.getRadarImages(selectedRadarCode,selectedDuration);
 	    
 	    if (images == null) {
 	    	Log.e("WiseRadar","System error -- No images were received. Likely due to Environment Canada not having any available data.");
-	    	publishProgress("Image fetch failed");
+	    	publishProgress("Image update failed");
 	    	return null;
 	    }
 	    
@@ -112,10 +111,6 @@ public class RadarLoader extends AsyncTask<String, String, LayerDrawable> {
 	    
 	    return layers;
 	}
-	
-	private List<Bitmap> matchGPS() {
-    	return imgFetch.getRadarImages(selectedRadarCode,selectedDuration);	//TODO: Update to real GPS use eventually
-    }
 	
 	@Override
 	protected void onPostExecute (LayerDrawable result) {

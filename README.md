@@ -16,6 +16,7 @@ NOTE: As per agreement with WeatherOffice.gc.ca all data used within this app is
 :      This app is made free and open source by myself and carries no warranty to the interested users. You will download, compile and use this application at your own disgression.
 	  
 PLANNED CHANGES:  
-:	- Add the GPS functionality  
-:	- Pinch-zoom functionality
-:	- Essential menu functions (Appropriate disclaimer, etc.)
+:	- Essential menu functions (Appropriate disclaimer, etc.)  
+:	- Pinch-zoom functionality  
+:	- Predictive weather for location  
+
