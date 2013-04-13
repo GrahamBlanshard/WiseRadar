@@ -11,7 +11,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
         android:textSize="25sp" />
-
+        
     <ImageView
         android:id="@+id/radarImage"
         android:layout_width="wrap_content"
@@ -20,24 +20,6 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="15dp"
         android:contentDescription="@string/radarDesc"
-        android:src="@drawable/ic_launcher" />
-        
-    <Button
-        android:id="@+id/prefButton"
-        android:layout_width="160dip"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/refreshButton"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="15dp"
-        android:text="@string/pickButton" />
-
-    <Button
-        android:id="@+id/refreshButton"
-        android:layout_width="160dip"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="10dp"
-        android:layout_above="@+id/prefButton"
-        android:text="@string/refresh" />
-
+        android:src="@drawable/ic_launcher" 
+        />
 </RelativeLayout>

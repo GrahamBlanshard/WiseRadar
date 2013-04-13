@@ -17,28 +17,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="15dp"
-        android:layout_alignParentLeft="true"
+        android:layout_centerHorizontal="true"
         android:layout_below="@+id/radarName"
         android:contentDescription="@string/radarDesc"
         android:src="@drawable/ic_launcher" />
-
-    <Button
-        android:id="@+id/refreshButton"
-        android:layout_width="160dip"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/radarName"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="15dp"
-        android:text="@string/refresh" />
-        
-    <Button
-        android:id="@+id/prefButton"
-        android:layout_width="160dip"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/refreshButton"
-        android:layout_marginRight="15dp"
-        android:text="@string/pickButton" />
-
 </RelativeLayout>

@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">WiseRadar</string>
-    <string name="version">v0.3</string>
-    <string name="pickButton">Change Preferences</string>
+    <string name="version">v1.0</string>
+    <string name="pickButton">Preferences</string>
     <string name="radarDesc">Current active radar image</string>
     <string name="refresh">Refresh</string>
     <string name="pick_title">Pick a Radar</string>
+    <string name="about">About</string>
+    <string name="quit">Exit</string>
+    <string name="about_author">About the Author</string>
+    <string name="about_app">About WiseRadar</string>
+    <string name="about_license">License Details</string>
 </resources>

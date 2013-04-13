@@ -2,8 +2,8 @@ WiseRadar
 =========
 
 Author: Graham Blanshard  
-:        https://github.com/GrahamBlanshard/  
-:        graham.blanshard@gmail.com  
+-        https://github.com/GrahamBlanshard/  
+-        graham.blanshard@gmail.com  
 
 Summary: Canadian Weather Radar Data for Android smartphones  
 
@@ -13,10 +13,24 @@ Code made available free online for all interested users.
 
 NOTE: As per agreement with WeatherOffice.gc.ca all data used within this app is used for NON-COMMERCIAL USES ONLY.
 
-:      This app is made free and open source by myself and carries no warranty to the interested users. You will download, compile and use this application at your own disgression.
+Copyright (C) 2013  Graham Blanshard
+
+    This program is free software: you can redistribute it and/or modify  
+    it under the terms of the GNU General Public License as published by  
+    the Free Software Foundation, either version 3 of the License, or  
+    (at your option) any later version.  
+ 
+    This program is distributed in the hope that it will be useful,  
+    but WITHOUT ANY WARRANTY; without even the implied warranty of  
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  
+    GNU General Public License for more details.  
+
+    You should have received a copy of the GNU General Public License  
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.  
+
+	See License.txt for full text
 	  
 PLANNED CHANGES:  
-:	- Essential menu functions (Appropriate disclaimer, etc.)  
-:	- Pinch-zoom functionality  
-:	- Predictive weather for location  
+	- Pinch-zoom functionality  
+	- Predictive weather for location (Maybe)
 

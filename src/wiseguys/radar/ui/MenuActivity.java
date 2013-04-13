@@ -15,8 +15,9 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.View;
-import android.widget.Button;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -33,35 +34,32 @@ public class MenuActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.menu);
-        
-        //Shared Preferences -- Needed to pass data between activities.
-        SharedPreferences settings = getSharedPreferences("APP_PREFS", 0);
-        SharedPreferences.Editor spEditor = settings.edit();
-        String versionID = this.getBaseContext().getString(R.string.version);
-        spEditor.putString("APP_NAME", "WiseRadar" + versionID);
-        spEditor.commit();
-        
-        sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        
-        Button pickButton = (Button) findViewById(R.id.prefButton);        
-        pickButton.setOnClickListener(new View.OnClickListener() {        				
-			@Override
-			public void onClick(View v) {
-				Intent myIntent = new Intent(v.getContext(), PrefActivity.class);
-				startActivity(myIntent);
-			}
-		});
-        
-        Button refreshButton = (Button) findViewById(R.id.refreshButton);        
-        refreshButton.setOnClickListener(new View.OnClickListener() {        				
-			@Override
-			public void onClick(View v) {
-				refresh();
-			}
-		});
+        setContentView(R.layout.menu);   
         
         useGPS = false;
+        sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());   
+    }
+
+    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.menu_quit:
+            	quit();
+                return true;
+            case R.id.menu_about:
+                showAbout();
+                return true;
+            case R.id.menu_refresh:
+            	refresh();
+                return true;
+            case R.id.menu_preferences:
+            	showPreferences();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
     
     /**
@@ -103,13 +101,36 @@ public class MenuActivity extends Activity {
     }
     
     /**
+     * Creates our menu
+     */
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.radar_menu, menu);
+        return true;
+    }
+    
+    /**
+     * Activity Pause -- Cancel any updates and disable GPS
+     */
+    @Override
+    protected void onPause() {
+    	super.onPause();	     
+	    checkAndCancelUpdate();
+	    
+	    //Remove GPS if used
+	    if (useGPS && gps != null) {
+	    	gps.disable();
+	    }
+    }
+    
+    /**
      * Re-receive the images on command
      */
     private void refresh() {
     	
-    	TextView radarName = (TextView)findViewById(R.id.radarName);
+    	TextView radarName = (TextView)findViewById(R.id.radarName);    	
 	    ImageView sImage = (ImageView)findViewById(R.id.radarImage);
-    	
+
 	    //Verify we have a network
     	if (!validConnection()) {    		
     		radarName.setText("No valid Networks");
@@ -120,8 +141,14 @@ public class MenuActivity extends Activity {
     	String codeToUse = null;
     			
     	checkAndCancelUpdate();
-    	selectedRadarCode = sharedPrefs.getString("pref_radar_code", "Pick a Radar");
+    	selectedRadarCode = sharedPrefs.getString("pref_radar_code", "new");
     	codeToUse = selectedRadarCode;
+    	
+    	if (selectedRadarCode.equals("new")) {
+    		radarName.setText("Please set your preferences!");
+        	sImage.setImageDrawable(null);
+        	return;
+    	}
     	
     	if (useGPS) {
     		if (!gps.ready()) {    			
@@ -166,26 +193,15 @@ public class MenuActivity extends Activity {
 	    }
     }
     
-    @Override
-    protected void onPause() {
-    	super.onPause();	     
-	    checkAndCancelUpdate();
-	    
-	    //Remove GPS if used
-	    if (useGPS && gps != null) {
-	    	gps.disable();
-	    }
-    }
+    
     
     @Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-    		Intent intent = new Intent();
-            setResult(RESULT_OK, intent);
-            
-            finish();
+    		quit();
             return true;
         } else if (keyCode == KeyEvent.KEYCODE_MENU) {
+        	openOptionsMenu();
         	return true;
         }
         return false;
@@ -206,5 +222,25 @@ public class MenuActivity extends Activity {
 	    }
 	    
 	    return status;
+    }
+    
+    private void showAbout() {
+    	Intent myIntent = new Intent(this.getBaseContext(), AboutActivity.class);
+		startActivity(myIntent);  	 
+    }
+    
+    private void showPreferences() {
+    	Intent myIntent = new Intent(this.getBaseContext(), PrefActivity.class);
+		startActivity(myIntent);
+    }
+    
+    /**
+     * Closes our application
+     */
+    private void quit() {
+    	Intent intent = new Intent();
+        setResult(RESULT_OK, intent);
+        
+        finish();
     }
 }
