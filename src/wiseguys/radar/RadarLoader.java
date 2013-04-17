@@ -112,7 +112,7 @@ public class RadarLoader extends AsyncTask<String, String, LayerDrawable> {
 	protected void onPostExecute (LayerDrawable result) {
 		
 		if (result == null) {
-			name.setText("Update Failed.");
+			name.setText("No Radar Data Available");
 			
 			//Back out of updates if we don't have a running animated object
 			if (anim == null) {

@@ -51,7 +51,12 @@ public class RadarHelper {
 	 */
 	public static List<String> parseRadarImages(String code) {
 		List<String> imageURLs = new ArrayList<String>();
-		//String temp = code.substring(code.indexOf("<div class=\"image-list\">"));
+		
+		if (!code.contains("image-list-ol")) {
+			Log.e("WiseRadar","No Radar Images available at this time");
+			return null;
+		}
+		
 		String temp = code.substring(code.indexOf("<ol class=\"image-list-ol\">"));
 		temp = temp.substring(0,temp.indexOf("</ol>"));
 		
