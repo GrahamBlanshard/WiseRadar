@@ -10,7 +10,8 @@ import android.util.Log;
 
 public class RadarHelper {
 	
-	public static final String baseURL = "http://www.weatheroffice.gc.ca";
+	public static final String baseURL = "http://weather.gc.ca";//"http://www.weatheroffice.gc.ca";
+	//http://weather.gc.ca/radar/index_e.html?id=<CODE>
 	public static final int TEN_MINUTES = 600000;
 	
 	public static String codeToName(String code, Context systemContext) {
@@ -50,17 +51,18 @@ public class RadarHelper {
 	 */
 	public static List<String> parseRadarImages(String code) {
 		List<String> imageURLs = new ArrayList<String>();
-		String temp = code.substring(code.indexOf("<div class=\"image list\">"));
-		temp = temp.substring(0,temp.indexOf("</div>"));
+		//String temp = code.substring(code.indexOf("<div class=\"image-list\">"));
+		String temp = code.substring(code.indexOf("<ol class=\"image-list-ol\">"));
+		temp = temp.substring(0,temp.indexOf("</ol>"));
 		
 		//At times, the Env. Canada page does not have available data
 		if (!temp.contains("<li>")) {
 			return null;
 		}	
 		
-		temp = temp.substring(temp.indexOf("<li><a href"),temp.indexOf("</ol>"));	
+		temp = temp.substring(temp.indexOf("<li><a href"),temp.lastIndexOf("</li>"));	
 		
-		Pattern p = Pattern.compile("display=(.*)\\\"");
+		Pattern p = Pattern.compile("display=(.*)&amp");
 		Matcher m = p.matcher(temp);
 		
 		while (m.find()) {

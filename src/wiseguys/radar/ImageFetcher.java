@@ -204,33 +204,34 @@ public class ImageFetcher {
     }
 	
 	private Bitmap getRoads(String code) {
-    	String roadImageURL = "/radar/images/layers/roads/" + code.toUpperCase() + "_roads.gif";
+    	//String roadImageURL = "/radar/images/layers/roads/" + code.toUpperCase() + "_roads.gif";
+		String roadImageURL = "/cacheable/images/radar/layers/roads/" + code.toUpperCase() + "_roads.gif";
     	Bitmap roadMap = imgFetch.getImage(roadImageURL);
     	
     	return roadMap;
     }
     
     private Bitmap getTowns(String code) {
-    	String townImageURL = "/radar/images/layers/default_cities/" + code + "_towns.gif";
+    	String townImageURL = "/cacheable/images/radar/layers/default_cities/" + code + "_towns.gif";
     	Bitmap towns = imgFetch.getImage(townImageURL);
     	
     	return towns;
     }
     
     private Bitmap getTownsMore(String code) {
-    	String townImageURL = "/radar/images/layers/additional_cities/" + code + "_towns.gif";
+    	String townImageURL = "/cacheable/images/radar/layers/additional_cities/" + code + "_towns.gif";
     	Bitmap towns = imgFetch.getImage(townImageURL);
     	return towns;
     }
     
     private Bitmap getRoadNumbers(String code) {
-    	String roadNumURL = "/radar/images/layers/road_labels/" + code + "_labs.gif";
+    	String roadNumURL = "/cacheable/images/radar/layers/road_labels/" + code + "_labs.gif";
     	Bitmap roadNums = imgFetch.getImage(roadNumURL);
     	return roadNums;
     }
     
     private Bitmap getRivers(String code) {
-    	String riverURL = "/radar/images/layers/rivers/" + code + "_rivers.gif";
+    	String riverURL = "/cacheable/images/radar/layers/rivers/" + code + "_rivers.gif";
     	Bitmap rivers = imgFetch.getImage(riverURL);
     	return rivers;
     }
