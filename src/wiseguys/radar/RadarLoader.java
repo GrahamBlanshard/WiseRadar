@@ -83,7 +83,7 @@ public class RadarLoader extends AsyncTask<String, String, LayerDrawable> {
 	    }
 	    
 	    for (int i = images.size()-1; i >= 0; i--) {
-	    	anim.addFrame(new BitmapDrawable(images.get(i)), 750); //TODO: Magic number, should we allow customization via preferences?	    
+	    	anim.addFrame(new BitmapDrawable(images.get(i)), 750);
 	    }
 
 	    publishProgress("Fetching overlays");
@@ -129,7 +129,7 @@ public class RadarLoader extends AsyncTask<String, String, LayerDrawable> {
 	
 	@Override
 	protected void onPreExecute () {
-		sImage.setImageDrawable(null); //TODO: Let's draw an image for this someday
+		sImage.setImageResource(R.drawable.radar);
 		name.setText(originalName);
 	}
 	

@@ -134,7 +134,7 @@ public class MenuActivity extends Activity {
 	    //Verify we have a network
     	if (!validConnection()) {    		
     		radarName.setText("No valid Networks");
-    		sImage.setImageDrawable(null);
+    		sImage.setImageResource(R.drawable.radar);
     		return;
     	}
     	
@@ -146,7 +146,7 @@ public class MenuActivity extends Activity {
     	
     	if (selectedRadarCode.equals("new")) {
     		radarName.setText("Please set your preferences!");
-        	sImage.setImageDrawable(null);
+    		sImage.setImageResource(R.drawable.radar);
         	return;
     	}
     	
@@ -169,7 +169,7 @@ public class MenuActivity extends Activity {
         
         if (selectedRadarName == null) {
         	radarName.setText("No Location Selected");
-        	sImage.setImageDrawable(null);
+        	sImage.setImageResource(R.drawable.radar);
         	return;
         }
         

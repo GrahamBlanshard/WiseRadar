@@ -1,6 +1,7 @@
 package wiseguys.radar.ui;
 
 import wiseguys.radar.R;
+import wiseguys.radar.RadarHelper;
 import android.app.Activity;
 import android.app.Dialog;
 import android.os.Bundle;
@@ -53,7 +54,8 @@ public class AboutActivity extends Activity {
         	dialog.setContentView(R.layout.dialog_layout);
         	dialog.setCanceledOnTouchOutside(true);
         	text = (TextView) dialog.findViewById(R.id.text);
-        	text.setText("All code by Graham Blanshard\n\nhttp://www.pro-graham.com/\ngraham.blanshard@gmail.com");
+        	text.setText("All code by Graham Blanshard\n\nhttp://www.pro-graham.com/\ngraham.blanshard@gmail.com\n\nIf you have any questions or would like to see any features " +
+        	"please contact me at one of these locations.");
             break;
         case DIALOG_LICENSE_ID:
         	dialog.setTitle("GPL v3.0"); //http://opensource.org/licenses/GPL-3.0
@@ -78,9 +80,10 @@ public class AboutActivity extends Activity {
         	dialog.setContentView(R.layout.dialog_layout);
         	dialog.setCanceledOnTouchOutside(true);
         	text = (TextView) dialog.findViewById(R.id.text);
-        	String textValue = "WiseRadar " + this.getResources().getString(R.string.version) + " is a mobile portal to view Environment Canada weather radar images. " +
+        	String textValue = "WiseRadar " + this.getResources().getString(R.string.version) + " is an open source mobile portal to view Environment Canada weather radar images. " +
         					   "\nAll radar imagry is provided free on behalf of Environment Canada for non-commercial uses. If you wish to know more about Environment" +
-        					   " Canada, the radar images, or the use of this data please visit their website:\n\nhttp://www.weatheroffice.gc.ca/";
+        					   " Canada, the radar images, or the use of this data please visit their website:\n\n"+RadarHelper.baseURL+"\n\nThis app's source code can "+
+        					   " be located online at https://github.com/GrahamBlanshard/WiseRadar";
         	text.setText(textValue);        	
             break;
         default:
