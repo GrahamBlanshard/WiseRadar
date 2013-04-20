@@ -14,18 +14,18 @@ import org.apache.http.protocol.HttpContext;
 
 import wiseguys.radar.RadarHelper;
 
-import android.util.Log;
-
 public class SourceFetcherThread extends Thread {
 
 	private String code;
 	private String duration;
 	private String source;
+	private boolean getBaseImage;
 	
 	
 	public SourceFetcherThread() {
 		code = null;
 		source = null;
+		getBaseImage = false;
 	}
 	
 	public void setCode(String code) {
@@ -45,11 +45,16 @@ public class SourceFetcherThread extends Thread {
 	}
 	
 	public void run() {
-		if (code != null) {
+		if (code != null || getBaseImage) {
 			try {
-				source = getHtml();
+				if (!getBaseImage) {
+					source = getHtml();
+				} else {
+					//We do this as a one time fetch for when we need to get the Canada Wide image
+					source = getCanadaImage();
+					getBaseImage = false;
+				}
 			} catch (IOException ioe) {
-				Log.e("HTML_ERR","IOException reported on getHtml. " + ioe.getLocalizedMessage());
 			} finally {
 				if (source == null)
 					source = "Error!";
@@ -64,7 +69,6 @@ public class SourceFetcherThread extends Thread {
 			durationAddition = "&duration=long";
 		}
 		String envURL = RadarHelper.baseURL + "/radar/index_e.html?id=" + code + durationAddition;
-		Log.i("WiseRadar","Loading page for parsing: " + envURL);
 		
 	    HttpClient httpClient = new DefaultHttpClient();
 	    HttpContext localContext = new BasicHttpContext();
@@ -85,5 +89,36 @@ public class SourceFetcherThread extends Thread {
 	    }
 
 	    return result.toString();
+	}
+	
+	private String getCanadaImage() throws ClientProtocolException, IOException {
+
+		String envURL = RadarHelper.baseURL + "/radar/";
+		
+	    HttpClient httpClient = new DefaultHttpClient();
+	    HttpContext localContext = new BasicHttpContext();
+	    
+	    HttpGet httpGet = new HttpGet(envURL);
+	    HttpResponse response = httpClient.execute(httpGet, localContext);
+	    StringBuilder result = new StringBuilder();
+
+	    BufferedReader reader = new BufferedReader(
+	        new InputStreamReader(
+	          response.getEntity().getContent()
+	        )
+	      );
+
+	    String line = null;
+	    while ((line = reader.readLine()) != null){
+	      result.append(line + "\n");
+	    }
+	    
+	    
+
+	    return result.toString();
+	}
+	
+	public void setBaseFetch() {
+		getBaseImage = true;
 	}
 }

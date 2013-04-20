@@ -12,7 +12,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
-import android.util.Log;
 
 public class ImageFetcher {
 	
@@ -26,8 +25,7 @@ public class ImageFetcher {
 	 * Singleton constructor
 	 */
 	private ImageFetcher() {	
-		failedPreviously = false;
-		
+		failedPreviously = false;		
 	}
 	
 	/**
@@ -73,7 +71,6 @@ public class ImageFetcher {
 		try {
 			htmlFetch.join();			
 		} catch (InterruptedException e) {
-			Log.w("WiseRadar","ImageFetcher has been interrupted");
 			failedPreviously = true;
 			return false;
 		}
@@ -126,8 +123,7 @@ public class ImageFetcher {
 		imgDown.start();
 		try {
 			imgDown.join();
-		} catch (InterruptedException ie) {
-			Log.w("WiseRadar", "Image Fetching Thread halted during download.");
+		} catch (InterruptedException ie) {			
 			failedPreviously = true;
 			return null;
 		}

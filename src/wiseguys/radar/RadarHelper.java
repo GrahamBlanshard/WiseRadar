@@ -5,8 +5,12 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import wiseguys.radar.conn.ImageDownloaderThread;
+import wiseguys.radar.conn.SourceFetcherThread;
 import android.content.Context;
-import android.util.Log;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 
 public class RadarHelper {
 	
@@ -17,12 +21,10 @@ public class RadarHelper {
 	public static String codeToName(String code, Context systemContext) {
 		//Test to make sure we're ready to accept it
 		if (systemContext == null) {
-			Log.e("WiseRadar","You have not yet set the system context");
 			return null;
 		}
 		
 		if (code == null) {
-			Log.e("WiseRadar","No location provided to codeToName");
 			return null;
 		}
 		
@@ -53,7 +55,6 @@ public class RadarHelper {
 		List<String> imageURLs = new ArrayList<String>();
 		
 		if (!code.contains("image-list-ol")) {
-			Log.e("WiseRadar","No Radar Images available at this time");
 			return null;
 		}
 		
@@ -61,7 +62,7 @@ public class RadarHelper {
 		temp = temp.substring(0,temp.indexOf("</ol>"));
 		
 		//At times, the Env. Canada page does not have available data
-		if (!temp.contains("<li>")) {
+		if (!temp.contains("<li>")) {			
 			return null;
 		}	
 		
@@ -73,9 +74,29 @@ public class RadarHelper {
 		while (m.find()) {
 			String imgName = m.group(1);
 			imageURLs.add(imgName);
-			Log.d("ImageFetcher",imgName);
 		}
 		
 		return imageURLs;
+	}
+	
+	public static Bitmap GetCanadaWideImage(Resources r) {
+		ImageDownloaderThread imgDown;
+		SourceFetcherThread fetcher = new SourceFetcherThread();
+		fetcher.setBaseFetch();		
+		String basicSource = null;
+
+		try {
+			fetcher.start();
+			fetcher.join();
+			basicSource = fetcher.getSource();
+			List<String> allImages = parseRadarImages(basicSource);
+			
+			imgDown = new ImageDownloaderThread(baseURL + allImages.get(0));
+			imgDown.start();
+			imgDown.join();
+		} catch (Exception ie) {		
+			return BitmapFactory.decodeResource(r, R.drawable.radar);
+		}
+		return (Bitmap)imgDown.getImage();
 	}
 }

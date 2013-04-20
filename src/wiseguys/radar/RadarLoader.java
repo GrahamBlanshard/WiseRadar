@@ -13,7 +13,6 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -58,7 +57,6 @@ public class RadarLoader extends AsyncTask<String, String, LayerDrawable> {
 		List<Bitmap> images = new ArrayList<Bitmap>();
 	    
 		if (selectedRadarCode == null) {
-	    	Log.e("WiseRadar","System error -- No code radar code selected from preferences, default failed.");	    	
 	    	return null;
 	    }
 	    
@@ -67,7 +65,6 @@ public class RadarLoader extends AsyncTask<String, String, LayerDrawable> {
 	    images = imgFetch.getRadarImages(selectedRadarCode,selectedDuration);
 	    
 	    if (images == null) {
-	    	Log.e("WiseRadar","System error -- No images were received. Likely due to Environment Canada not having any available data.");
 	    	publishProgress("Image update failed");
 	    	return null;
 	    }
@@ -78,7 +75,6 @@ public class RadarLoader extends AsyncTask<String, String, LayerDrawable> {
 	    anim = new AnimationDrawable();
 	    
 	    if (!imgFetch.finished()) {
-	    	Log.w("WiseRadar","Fetching images was interrupted early");
 	    	return null;
 	    }
 	    
@@ -93,15 +89,24 @@ public class RadarLoader extends AsyncTask<String, String, LayerDrawable> {
 	    
 	    publishProgress("Overlays received");
 	    
-	    //Layer the overlay ontop of the animated radar images
-	    Drawable[] layering = new Drawable[2];
-	    BitmapDrawable overlayBitmap = new BitmapDrawable(resources,overlay); //Convert Bitmap to drawable
-	    int calculatedOffset = images.get(0).getWidth() - overlay.getWidth(); //our overlay doesn't sit over the radar properly. Offset to the left to uncover legend
-	    layering[0] = anim;
-	    layering[1] = overlayBitmap;
-	    LayerDrawable layers = new LayerDrawable(layering);
+	    LayerDrawable layers;
 	    
-	    layers.setLayerInset(1, 0, 0, calculatedOffset, 0);
+	    if (overlay != null) {
+	    	//Layer the overlay ontop of the animated radar images
+		    Drawable[] layering = new Drawable[2];
+		    BitmapDrawable overlayBitmap = new BitmapDrawable(resources,overlay); //Convert Bitmap to drawable
+		    int calculatedOffset = images.get(0).getWidth() - overlay.getWidth(); //our overlay doesn't sit over the radar properly. Offset to the left to uncover legend
+		    layering[0] = anim;
+		    layering[1] = overlayBitmap;
+		    layers = new LayerDrawable(layering);
+		    
+		    layers.setLayerInset(1, 0, 0, calculatedOffset, 0);
+	    } else {
+	    	//No layers selected!
+	    	Drawable[] layering = new Drawable[1];
+	    	layering[0] = anim;
+	    	layers = new LayerDrawable(layering);
+	    }
 	    
 	    publishProgress("Finishing");
 	    

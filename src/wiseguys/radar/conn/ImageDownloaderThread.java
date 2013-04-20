@@ -7,7 +7,6 @@ import java.net.URL;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.util.Log;
 
 public class ImageDownloaderThread extends Thread {
 
@@ -38,9 +37,7 @@ public class ImageDownloaderThread extends Thread {
 	        image = BitmapFactory.decodeStream(is);
 	        
 	        is.close();	                
-		} catch (IOException e) {
-		    Log.e("ImageDownloaderThread", "Error: " + e);
-		}
+		} catch (IOException e) { }
 
 	}
 

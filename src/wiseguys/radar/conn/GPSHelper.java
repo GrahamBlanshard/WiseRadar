@@ -10,7 +10,6 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Toast;
 
 public class GPSHelper {
@@ -71,7 +70,6 @@ public class GPSHelper {
 		    	if (newLocationIsBetter(location)) {
 		    		lastKnownLocation = location;
 		    	}
-		    	Log.i("WiseRadar","Location update!");
 		    }
 		    
 			public void onStatusChanged(String provider, int status, Bundle extras) {
@@ -81,7 +79,6 @@ public class GPSHelper {
 		    public void onProviderEnabled(String provider) {	  		
 	    		if (!locationManager.getProviders(true).contains(provider)) {
 	    			locationManager.requestLocationUpdates(provider, 0, 0, this);
-	    			Log.i("WiseRadar","New Provider: " + provider);
 	    		}
 	    		GPSSetup = true;
 		    }
@@ -92,7 +89,6 @@ public class GPSHelper {
 		    	} else if (provider.equals(LocationManager.GPS_PROVIDER)) {
 		    		GPSSetup = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
 		    	}
-		    	Log.i("WiseRadar","Lost Provider: " + provider);
 		    }
 		};
 
@@ -199,7 +195,6 @@ public class GPSHelper {
 					closest = radarCodes[i];
 				}				
 			} catch (NumberFormatException e) {
-				Log.e("WiseRadar","Exception on findClosestCity: " + e.getLocalizedMessage());
 				return null;
 			}
 		}

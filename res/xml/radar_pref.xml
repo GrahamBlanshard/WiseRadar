@@ -8,7 +8,7 @@
     					android:entries="@array/radar_cities"
     					android:entryValues="@array/radar_codes"
     					android:summary="List of available Radar locations"
-    					android:defaultValue="gps">
+    					android:defaultValue="new">
     		</ListPreference>
     	</PreferenceCategory>
     	<PreferenceCategory android:title="GPS">
