@@ -5,6 +5,11 @@ Author: Graham Blanshard
 -        https://github.com/GrahamBlanshard/  
 -        graham.blanshard@gmail.com  
 
+***
+Now Available on the Google Play App Store!!
+https://play.google.com/store/apps/details?id=wiseguys.radar
+***
+
 Summary: Canadian Weather Radar Data for Android smartphones  
 
 Scrape of weather radar images from http://www.weatheroffice.gc.ca/  
