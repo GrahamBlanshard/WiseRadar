@@ -1,5 +1,6 @@
 package wiseguys.radar.ui;
 
+import wiseguys.radar.ui.adapter.PhotoViewAttacher;
 import wiseguys.radar.R;
 import wiseguys.radar.RadarHelper;
 import wiseguys.radar.RadarLoader;
@@ -29,6 +30,7 @@ public class MenuActivity extends Activity {
 	private RadarLoader loader;
 	private GPSHelper gps;
 	private boolean useGPS;
+    private PhotoViewAttacher adapter;
 	
     /** Called when the activity is first created. */
     @Override
@@ -135,6 +137,7 @@ public class MenuActivity extends Activity {
     	if (!validConnection()) {    		
     		radarName.setText("No valid Networks");
     		sImage.setImageResource(R.drawable.radar);
+            updateAdapter(sImage);
     		return;
     	}
     	
@@ -158,6 +161,7 @@ public class MenuActivity extends Activity {
 	    		radarName.setText("Please set your preferences!");
 	    		Bitmap canadaWide = RadarHelper.GetCanadaWideImage(getResources());
 	    		sImage.setImageBitmap(canadaWide);
+                updateAdapter(sImage);
 	        	return;
 	    	}
     	}
@@ -169,6 +173,9 @@ public class MenuActivity extends Activity {
         if (selectedRadarName == null) {
         	radarName.setText("No Location Selected");
         	sImage.setImageResource(R.drawable.radar);
+
+
+
         	return;
         }
         
@@ -177,6 +184,21 @@ public class MenuActivity extends Activity {
 	    //Put it all together      
         loader = new RadarLoader(this.getBaseContext(),this.getResources(),sImage,radarName);
         loader.execute(codeToUse,selectedDuration);
+
+        updateAdapter(sImage);
+    }
+
+    /**
+     * Do an update to the PhotoViewAdapter (or create if necessary)
+     * @param img ImageView we are attaching to
+     */
+    private void updateAdapter(ImageView img) {
+        if (adapter == null) {
+            adapter = new PhotoViewAttacher(img);
+        } else {
+            adapter.update();
+        }
+
     }
 
 	/**

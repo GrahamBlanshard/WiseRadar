@@ -54,8 +54,8 @@ public class AboutActivity extends Activity {
         	dialog.setContentView(R.layout.dialog_layout);
         	dialog.setCanceledOnTouchOutside(true);
         	text = (TextView) dialog.findViewById(R.id.text);
-        	text.setText("All code by Graham Blanshard\n\nhttp://www.pro-graham.com/\ngraham.blanshard@gmail.com\n\nIf you have any questions or would like to see any features " +
-        	"please contact me at one of these locations.");
+        	text.setText("All radar by Graham Blanshard\n\n   http://www.pro-graham.com/\n   graham.blanshard@gmail.com\n\nIf you have any questions or would like to see any features " +
+        	"please contact me at one of these locations.\n\nPinchZoom and Scroll functions (added v1.2) are provided by the PhotoView project by Chris Banes");
             break;
         case DIALOG_LICENSE_ID:
         	dialog.setTitle("GPL v3.0"); //http://opensource.org/licenses/GPL-3.0
@@ -72,7 +72,10 @@ public class AboutActivity extends Activity {
 								    "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"+
 								    "GNU General Public License for more details.\n\n"+
 								"You should have received a copy of the GNU General Public License\n"+    
-								    "along with this program.  If not, see http://www.gnu.org/licenses/.";
+								    "along with this program.  If not, see http://www.gnu.org/licenses/.\n\n"+
+                                "PinchZoom and Scroll functionality has been provided as part of the PhotoView\n"+
+                                    "project available on GitHub (https://github.com/chrisbanes/PhotoView)\n"+
+                                    "licensed under the Apache License v2.0. See documentation for details";
         	text.setText(licenceText);
         	break;        	
         case DIALOG_APP_ID:

@@ -36,6 +36,5 @@ Copyright (C) 2013  Graham Blanshard
 	See License.txt for full text
 	  
 PLANNED CHANGES:  
-	- Pinch-zoom functionality  
 	- Predictive weather for location (Maybe)
 
