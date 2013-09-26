@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">WiseRadar</string>
-    <string name="version">v1.2</string>
+    <string name="version">v1.2.1</string>
     <string name="pickButton">Preferences</string>
     <string name="radarDesc">Current active radar image</string>
     <string name="refresh">Refresh</string>
