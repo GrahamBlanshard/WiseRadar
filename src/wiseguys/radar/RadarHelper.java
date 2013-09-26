@@ -68,7 +68,7 @@ public class RadarHelper {
 		
 		temp = temp.substring(temp.indexOf("<li><a href"),temp.lastIndexOf("</li>"));	
 		
-		Pattern p = Pattern.compile("display=(.*)&amp");
+		Pattern p = Pattern.compile("display=(.*GIF)&amp");
 		Matcher m = p.matcher(temp);
 		
 		while (m.find()) {

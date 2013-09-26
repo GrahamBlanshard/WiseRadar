@@ -78,7 +78,7 @@ public class ImageFetcher {
 		return true;
 	}
 
-	public List<Bitmap> getRadarImages(String code, String duration) {
+	public List<Bitmap> getRadarImages(String code, String duration, int colours) {
 		
 		finished = false;
 		List<Bitmap> images = new ArrayList<Bitmap>();
@@ -95,6 +95,8 @@ public class ImageFetcher {
 		if (radarImgUrls == null) {
 			return latestImages;
 		}
+
+        radarImgUrls = changeDetail(radarImgUrls,colours);
 		
 		for (String imageURL : radarImgUrls) {
 			Bitmap newImage = getImage(imageURL);
@@ -230,6 +232,30 @@ public class ImageFetcher {
     	String riverURL = "/cacheable/images/radar/layers/rivers/" + code + "_rivers.gif";
     	Bitmap rivers = imgFetch.getImage(riverURL);
     	return rivers;
+    }
+
+    private List<String> changeDetail(List<String> images, int colours) {
+        List<String> newList = new ArrayList<String>();
+        if (colours == 8) {
+            //"detailed"
+            for (String img : images) {
+                if (!img.contains("/detailed/")) {
+                    //Add detailed to URL
+                    img = img.replace("/radar/","/radar/detailed/");
+                }
+                newList.add(img);
+            }
+
+        } else {
+            for (String img : images) {
+                if (img.contains("/detailed/")) {
+                    //Remove detailed to URL
+                    img = img.replace("/detailed/","/");
+                }
+                newList.add(img);
+            }
+        }
+        return newList;
     }
     
     /**

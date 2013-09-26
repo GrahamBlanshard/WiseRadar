@@ -25,6 +25,15 @@
     					android:defaultValue="short">
     		</ListPreference>
     	</PreferenceCategory>
+        <PreferenceCategory android:title="Colours">
+            <ListPreference android:title="Colour Depth"
+                android:key="pref_radar_colour"
+                android:entries="@array/intensity"
+                android:entryValues="@array/intensity_vals"
+                android:summary="Available Colour Options"
+                android:defaultValue="8">
+            </ListPreference>
+        </PreferenceCategory>
     	<PreferenceCategory android:title="Overlays">
     		<CheckBoxPreference android:title="Show Roads"
     					android:key="roads">

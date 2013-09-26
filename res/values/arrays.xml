@@ -165,7 +165,14 @@
 		<item>-60.212696</item>
 		<item>-57.660436</item>
 		<item>-53.124654</item>
-	</string-array>	
-	
+	</string-array>
+    <string-array name="intensity">
+        <item>8 Colours</item>
+        <item>14 Colours</item>
+    </string-array>
+    <string-array name="intensity_vals">
+        <item>8</item>
+        <item>14</item>
+    </string-array>
 	
 </resources>
