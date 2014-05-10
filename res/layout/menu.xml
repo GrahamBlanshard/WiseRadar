@@ -14,12 +14,12 @@
         
     <ImageView
         android:id="@+id/radarImage"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/radarName"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="15dp"
         android:contentDescription="@string/radarDesc"
-        android:src="@drawable/ic_launcher" 
+        android:src="@drawable/radar_circle"
         />
 </RelativeLayout>

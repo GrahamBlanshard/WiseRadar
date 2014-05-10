@@ -80,7 +80,7 @@ public class RadarLoader extends AsyncTask<String, String, LayerDrawable> {
 	    }
 	    
 	    for (int i = images.size()-1; i >= 0; i--) {
-	    	anim.addFrame(new BitmapDrawable(images.get(i)), 750);
+	    	anim.addFrame(new BitmapDrawable(context.getResources(),images.get(i)), 750);
 	    }
 
 	    publishProgress("Fetching overlays");

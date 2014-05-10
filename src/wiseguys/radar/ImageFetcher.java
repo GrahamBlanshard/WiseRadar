@@ -11,7 +11,9 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.Paint;
 
 public class ImageFetcher {
 	
@@ -189,16 +191,53 @@ public class ImageFetcher {
     		image1 = overlays.get(0);
     		Bitmap newOverlay = Bitmap.createBitmap(image1.getWidth(), image1.getHeight(), Bitmap.Config.ARGB_8888);
     		Canvas tempCanvas = new Canvas(newOverlay);
-    		tempCanvas.drawBitmap(overlays.get(0), new Matrix(), null);
+
+            Bitmap base = fixBackground(image1);
+    		tempCanvas.drawBitmap(base, new Matrix(), null);
+
+            int w = newOverlay.getWidth();
+            int h = newOverlay.getHeight();
     		
     		for (int i = 1; i < overlays.size(); i++) {
-    			tempCanvas.drawBitmap(overlays.get(i), 0, 0, null);
+                Bitmap overlay = overlays.get(i);
+
+                if ( overlay.getWidth() > w || overlay.getHeight() > h ) {
+                    Matrix m = new Matrix();
+                    m.setScale( ((float)w / (float)overlay.getWidth()),( (float)h / (float)overlay.getHeight() ) );
+                    Bitmap copy = Bitmap.createBitmap(overlay, 0, 0, overlay.getWidth(), overlay.getHeight(), m, false);
+                    overlay = copy;
+                }
+
+    			tempCanvas.drawBitmap( fixBackground(overlay), 0, 0, null);
     		}
 
     		image1 = Bitmap.createBitmap(newOverlay, 0, 0, newOverlay.getWidth(), newOverlay.getHeight());
     	}
     	
     	return image1;
+    }
+
+    private Bitmap fixBackground(Bitmap img) {
+        int width = img.getWidth();
+        int height = img.getHeight();
+
+        Bitmap copy = img.copy(Bitmap.Config.ARGB_8888,true);
+        copy.setHasAlpha(true);
+
+        int[] pixels = new int[width * height];
+        img.getPixels(pixels,0,width,0,0,width,height);
+
+        int color = -1;
+
+        for (int i = 0; i < pixels.length; i++) {
+            if (pixels[i] == color) {
+                pixels[i] = 0;
+            }
+        }
+
+        copy.setPixels(pixels, 0, width, 0, 0, width, height);
+
+        return copy;
     }
 	
 	private Bitmap getRoads(String code) {
@@ -270,7 +309,7 @@ public class ImageFetcher {
      * Check the time, skip update if we have not surpassed 10 minutes (interval of which Env. Canada updates)
      * @return True if its time to update the radar
      */
-    private boolean timeToUpdate() {
+    private boolean timeToUpdate( ) {
     	if (lastUpdate != null) {
     		Date now = new Date();
         	return (now.getTime() - lastUpdate.getTime()) >= RadarHelper.TEN_MINUTES;

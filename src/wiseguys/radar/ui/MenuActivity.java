@@ -15,11 +15,16 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class MenuActivity extends Activity {
@@ -31,13 +36,25 @@ public class MenuActivity extends Activity {
 	private GPSHelper gps;
 	private boolean useGPS;
     private PhotoViewAttacher adapter;
+
+    private int screenWidth;
+    private int screenHeight;
 	
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.menu);   
-        
+        setContentView(R.layout.menu);
+
+        WindowManager winManager = (WindowManager) getBaseContext().getSystemService(Context.WINDOW_SERVICE);
+        Display display = winManager.getDefaultDisplay();
+
+        DisplayMetrics point = new DisplayMetrics();
+        display.getMetrics(point);
+
+        screenWidth = point.widthPixels;
+        screenHeight = point.heightPixels;
+
         useGPS = false;
         sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());   
     }
@@ -142,7 +159,7 @@ public class MenuActivity extends Activity {
     	}
     	
     	String codeToUse = null;
-    			
+
     	checkAndCancelUpdate();
     	selectedRadarCode = sharedPrefs.getString("pref_radar_code", "new");
     	codeToUse = selectedRadarCode;
@@ -174,8 +191,6 @@ public class MenuActivity extends Activity {
         	radarName.setText("No Location Selected");
         	sImage.setImageResource(R.drawable.radar);
 
-
-
         	return;
         }
         
@@ -184,6 +199,12 @@ public class MenuActivity extends Activity {
 	    //Put it all together      
         loader = new RadarLoader(this.getBaseContext(),this.getResources(),sImage,radarName);
         loader.execute(codeToUse,selectedDuration);
+
+
+        ViewGroup.LayoutParams layoutParams = sImage.getLayoutParams();
+        layoutParams.height = screenWidth;
+        layoutParams.width = screenWidth;
+        sImage.setLayoutParams(layoutParams);
 
         updateAdapter(sImage);
     }
@@ -195,6 +216,7 @@ public class MenuActivity extends Activity {
     private void updateAdapter(ImageView img) {
         if (adapter == null) {
             adapter = new PhotoViewAttacher(img);
+            adapter.setScaleType(ImageView.ScaleType.CENTER);
         } else {
             adapter.update();
         }
