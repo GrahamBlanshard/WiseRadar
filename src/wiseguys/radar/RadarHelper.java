@@ -11,12 +11,14 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Location;
 
 public class RadarHelper {
 	
-	public static final String baseURL = "http://weather.gc.ca";//"http://www.weatheroffice.gc.ca";
+	public static final String baseURL = "http://weather.gc.ca";
 	//http://weather.gc.ca/radar/index_e.html?id=<CODE>
 	public static final int TEN_MINUTES = 600000;
+    public static Location latestLocation;
 	
 	public static String codeToName(String code, Context systemContext) {
 		//Test to make sure we're ready to accept it
@@ -83,7 +85,7 @@ public class RadarHelper {
 		ImageDownloaderThread imgDown;
 		SourceFetcherThread fetcher = new SourceFetcherThread();
 		fetcher.setBaseFetch();		
-		String basicSource = null;
+		String basicSource;
 
 		try {
 			fetcher.start();
@@ -97,6 +99,6 @@ public class RadarHelper {
 		} catch (Exception ie) {		
 			return BitmapFactory.decodeResource(r, R.drawable.radar);
 		}
-		return (Bitmap)imgDown.getImage();
+		return imgDown.getImage();
 	}
 }

@@ -49,7 +49,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener, Vers
 	static final int EDGE_RIGHT = 1;
 	static final int EDGE_BOTH = 2;
 
-	public static final float DEFAULT_MAX_SCALE = 3.0f;
+	public static final float DEFAULT_MAX_SCALE = 5.0f;
 	public static final float DEFAULT_MID_SCALE = 1.75f;
 	public static final float DEFAULT_MIN_SCALE = 1.0f;
 

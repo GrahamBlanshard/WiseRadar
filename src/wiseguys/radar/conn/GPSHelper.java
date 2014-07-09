@@ -56,27 +56,28 @@ public class GPSHelper {
     public void setup() {
 		// Acquire a reference to the system Location Manager
 		locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-		
-		if (!locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER) && 
+
+		if (!locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER) &&
 		    !locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
 			//No providers enabled
 			alert();
 		}
-		
+
 		// Define a listener that responds to location updates
 		locationListener = new LocationListener() {
-			
+
 		    public void onLocationChanged(Location location) {
 		    	if (newLocationIsBetter(location)) {
 		    		lastKnownLocation = location;
+                    RadarHelper.latestLocation = location;
 		    	}
 		    }
-		    
+
 			public void onStatusChanged(String provider, int status, Bundle extras) {
-				
+
 			}
 
-		    public void onProviderEnabled(String provider) {	  		
+		    public void onProviderEnabled(String provider) {
 	    		if (!locationManager.getProviders(true).contains(provider)) {
 	    			locationManager.requestLocationUpdates(provider, 0, 0, this);
 	    		}
@@ -93,14 +94,14 @@ public class GPSHelper {
 		};
 
 		// Register the listeners with the Location Manager to receive location updates
-		if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {   
+		if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
 			locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, RadarHelper.TEN_MINUTES, 2000, locationListener);
 		}
-		
+
 		if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
 			locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, RadarHelper.TEN_MINUTES, 2000, locationListener);
 		}
-		
+
 		//Setup our last known good location
 		lastKnownLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
 		
@@ -203,4 +204,30 @@ public class GPSHelper {
 		
 		return closest;
 	}
+
+    public double getClosestCityLatitude(String code) {
+        String[] radarCodes = context.getResources().getStringArray(R.array.radar_codes);
+        String[] radarLats = context.getResources().getStringArray(R.array.city_lat_vals);
+
+        for (int i = 0; i < radarCodes.length; i++) {
+            if (radarCodes[i].equals(code)) {
+                return Double.parseDouble(radarLats[i]);
+            }
+        }
+
+        return -1;
+    }
+
+    public double getClosestCityLongitude(String code) {
+        String[] radarCodes = context.getResources().getStringArray(R.array.radar_codes);
+        String[] radarLongs = context.getResources().getStringArray(R.array.city_long_vals);
+
+        for (int i = 0; i < radarCodes.length; i++) {
+            if (radarCodes[i].equals(code)) {
+                return Double.parseDouble(radarLongs[i]);
+            }
+        }
+
+        return -1;
+    }
 }

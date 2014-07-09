@@ -62,7 +62,7 @@ public class RadarLoader extends AsyncTask<String, String, LayerDrawable> {
 	    
 	    publishProgress("Fetching images");
 
-	    int colours = Integer.valueOf(sharedPrefs.getString("pref_radar_colour","8"));
+	    int colours = Integer.valueOf(sharedPrefs.getString("pref_radar_colour","14"));
 	    images = imgFetch.getRadarImages(selectedRadarCode,selectedDuration,colours);
 	    
 	    if (images == null) {

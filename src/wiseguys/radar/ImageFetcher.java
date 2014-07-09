@@ -1,7 +1,6 @@
 package wiseguys.radar;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import wiseguys.radar.conn.ImageDownloaderThread;
@@ -22,7 +21,7 @@ public class ImageFetcher {
 	private List<Bitmap> latestImages = null;
 	private boolean finished;
 	private boolean failedPreviously;
-	private Date lastUpdate;
+
 	/**
 	 * Singleton constructor
 	 */
@@ -43,17 +42,13 @@ public class ImageFetcher {
 	
 	/**
 	 * Checks and executes the code download if necessary
-	 * @param code
-	 * @return
+	 * @param code radar site code
+	 * @return true when an updated is required
 	 */
 	private boolean setupFetch(String code, String duration) {
 		if (htmlFetch != null) {
-			//Skip update when we are looking at the same radar which hasn't seen an update in 10 minutes, or last attempt had failed
-			if (htmlFetch.getCode().equals(code) && !timeToUpdate() && !failedPreviously) {
-				return false;
-			} else {
-				return getRadarFromConnection(code,duration);
-			}
+			//Skip update when we are looking at the same radar, or last attempt had failed
+            return !(htmlFetch.getCode().equals(code) && !failedPreviously) && getRadarFromConnection(code, duration);
 		}  else {			
 			return getRadarFromConnection(code,duration);
 		}
@@ -61,8 +56,8 @@ public class ImageFetcher {
 	
 	/**
 	 * Downloads the Radar data using a thread.
-	 * @param code
-	 * @return
+	 * @param code radar code
+	 * @return true when we get a successful html download
 	 */
 	private boolean getRadarFromConnection(String code,String duration) {
 		htmlFetch = new SourceFetcherThread();
@@ -84,7 +79,7 @@ public class ImageFetcher {
 		
 		finished = false;
 		List<Bitmap> images = new ArrayList<Bitmap>();
-		List<String> radarImgUrls = null;
+		List<String> radarImgUrls;
 		
 		if (!setupFetch(code,duration)) {
 			finished = true;
@@ -113,7 +108,6 @@ public class ImageFetcher {
 		failedPreviously = false;
 		finished = true;
 		latestImages = images;
-		lastUpdate = new Date();
 		return images;
 	}
 	
@@ -131,7 +125,7 @@ public class ImageFetcher {
 			failedPreviously = true;
 			return null;
 		}
-		return (Bitmap)imgDown.getImage();
+		return imgDown.getImage();
 	}
 	
 	public Bitmap getOverlays(String selectedRadarCode, SharedPreferences sharedPrefs, Context context) {
@@ -143,13 +137,14 @@ public class ImageFetcher {
 	    Boolean showRadarCircles = sharedPrefs.getBoolean("circles",false);
 	    Boolean showRoadNumbers = sharedPrefs.getBoolean("roadNums",false);
 	    Boolean showTownsMore = sharedPrefs.getBoolean("addTowns",false);
-	    Boolean showRivers = sharedPrefs.getBoolean("rivers",false);    
+	    Boolean showRivers = sharedPrefs.getBoolean("rivers",false);
+        Boolean gps = sharedPrefs.getBoolean("gps", false);
 	    
-	    Bitmap roadImage = null;
-	    Bitmap townImage = null;
-	    Bitmap townsMoreImage = null;
-	    Bitmap riverImage = null;
-	    Bitmap roadNumbersImage = null;
+	    Bitmap roadImage;
+	    Bitmap townImage;
+	    Bitmap townsMoreImage;
+	    Bitmap riverImage;
+	    Bitmap roadNumbersImage;
 	    Bitmap radarCircles = BitmapFactory.decodeResource(context.getResources(),R.drawable.radar_circle);
 	    
 	    if (showRoads) {
@@ -176,7 +171,7 @@ public class ImageFetcher {
 	    	overlays.add(roadNumbersImage);
 	    }
 	    
-	    return combine(overlays);
+	    return combine(overlays,gps);
 	}
 	
 	/**
@@ -184,13 +179,17 @@ public class ImageFetcher {
 	 * @param overlays Bitmaps to combine in order
 	 * @return a single Bitmap image
 	 */
-	private Bitmap combine(List<Bitmap> overlays) {
+	private Bitmap combine(List<Bitmap> overlays, boolean useGPS) {
     	Bitmap image1 = null;
     	
     	if (overlays.size() != 0) {
     		image1 = overlays.get(0);
     		Bitmap newOverlay = Bitmap.createBitmap(image1.getWidth(), image1.getHeight(), Bitmap.Config.ARGB_8888);
     		Canvas tempCanvas = new Canvas(newOverlay);
+
+            if (useGPS) {
+                tempCanvas = drawGPS(tempCanvas);
+            }
 
             Bitmap base = fixBackground(image1);
     		tempCanvas.drawBitmap(base, new Matrix(), null);
@@ -204,8 +203,7 @@ public class ImageFetcher {
                 if ( overlay.getWidth() > w || overlay.getHeight() > h ) {
                     Matrix m = new Matrix();
                     m.setScale( ((float)w / (float)overlay.getWidth()),( (float)h / (float)overlay.getHeight() ) );
-                    Bitmap copy = Bitmap.createBitmap(overlay, 0, 0, overlay.getWidth(), overlay.getHeight(), m, false);
-                    overlay = copy;
+                    overlay = Bitmap.createBitmap(overlay, 0, 0, overlay.getWidth(), overlay.getHeight(), m, false);
                 }
 
     			tempCanvas.drawBitmap( fixBackground(overlay), 0, 0, null);
@@ -215,6 +213,38 @@ public class ImageFetcher {
     	}
     	
     	return image1;
+    }
+
+    /***
+     * TODO:
+     * - GPSHelper, set a static value for lat/long when the closest city is first determined!
+     * - sharedPrefs, give user an option to show their location or not
+     */
+    private Canvas drawGPS(Canvas canvas) {
+
+        double lat = RadarHelper.latestLocation.getLatitude();
+        double lng = RadarHelper.latestLocation.getLongitude();
+        /*
+        double cLng = GPSHelper.getClosestCityLongitude();
+        double cLat = GPSHelper.getClosestCityLatitude();
+        */
+        Paint p = new Paint();
+        float X = 20.0f;
+        float Y = 20.0f;
+        float size = 8.0f;
+
+
+        p.setColor(Color.BLACK);
+        canvas.drawCircle(X,Y,size,p);
+        p.setColor(Color.WHITE);
+        canvas.drawCircle(X,Y,size*0.75f,p);
+
+        /**
+         * Determine our location based on knowledge that mid map is our town lat/long
+         */
+
+
+        return canvas;
     }
 
     private Bitmap fixBackground(Bitmap img) {
@@ -227,7 +257,7 @@ public class ImageFetcher {
         int[] pixels = new int[width * height];
         img.getPixels(pixels,0,width,0,0,width,height);
 
-        int color = -1;
+        int color = (pixels[0] == -1) ? -1 : -16777216; //-1 for white background | -16777216 for black
 
         for (int i = 0; i < pixels.length; i++) {
             if (pixels[i] == color) {
@@ -243,34 +273,27 @@ public class ImageFetcher {
 	private Bitmap getRoads(String code) {
     	//String roadImageURL = "/radar/images/layers/roads/" + code.toUpperCase() + "_roads.gif";
 		String roadImageURL = "/cacheable/images/radar/layers/roads/" + code.toUpperCase() + "_roads.gif";
-    	Bitmap roadMap = imgFetch.getImage(roadImageURL);
-    	
-    	return roadMap;
+    	return imgFetch.getImage(roadImageURL);
     }
     
     private Bitmap getTowns(String code) {
     	String townImageURL = "/cacheable/images/radar/layers/default_cities/" + code + "_towns.gif";
-    	Bitmap towns = imgFetch.getImage(townImageURL);
-    	
-    	return towns;
+    	return imgFetch.getImage(townImageURL);
     }
     
     private Bitmap getTownsMore(String code) {
     	String townImageURL = "/cacheable/images/radar/layers/additional_cities/" + code + "_towns.gif";
-    	Bitmap towns = imgFetch.getImage(townImageURL);
-    	return towns;
+    	return imgFetch.getImage(townImageURL);
     }
     
     private Bitmap getRoadNumbers(String code) {
     	String roadNumURL = "/cacheable/images/radar/layers/road_labels/" + code + "_labs.gif";
-    	Bitmap roadNums = imgFetch.getImage(roadNumURL);
-    	return roadNums;
+    	return imgFetch.getImage(roadNumURL);
     }
     
     private Bitmap getRivers(String code) {
     	String riverURL = "/cacheable/images/radar/layers/rivers/" + code + "_rivers.gif";
-    	Bitmap rivers = imgFetch.getImage(riverURL);
-    	return rivers;
+    	return imgFetch.getImage(riverURL);
     }
 
     private List<String> changeDetail(List<String> images, int colours) {
@@ -303,18 +326,5 @@ public class ImageFetcher {
      */
     public boolean finished() {
     	return finished;
-    }
-    
-    /**
-     * Check the time, skip update if we have not surpassed 10 minutes (interval of which Env. Canada updates)
-     * @return True if its time to update the radar
-     */
-    private boolean timeToUpdate( ) {
-    	if (lastUpdate != null) {
-    		Date now = new Date();
-        	return (now.getTime() - lastUpdate.getTime()) >= RadarHelper.TEN_MINUTES;
-    	}
-    	
-    	return true;    		
     }
 }

@@ -31,7 +31,7 @@
                 android:entries="@array/intensity"
                 android:entryValues="@array/intensity_vals"
                 android:summary="Available Colour Options"
-                android:defaultValue="8">
+                android:defaultValue="14">
             </ListPreference>
         </PreferenceCategory>
     	<PreferenceCategory android:title="Overlays">
