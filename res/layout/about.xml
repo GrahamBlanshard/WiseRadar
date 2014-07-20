@@ -3,6 +3,24 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
+
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
+        android:layout_weight="1">
+        <TextView
+            android:id="@+id/about_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginBottom="15dp"
+            android:text=""
+            android:textSize="14sp" />
+    </ScrollView>
     
     <Button
         android:id="@+id/author"
@@ -17,9 +35,15 @@
         android:text="@string/about_app" />
 
     <Button
+        android:id="@+id/latest"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/about_changes" />
+
+
+    <Button
         android:id="@+id/license"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/about_license" />
-
 </LinearLayout>

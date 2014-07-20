@@ -13,8 +13,14 @@
     	</PreferenceCategory>
     	<PreferenceCategory android:title="GPS">
     		<CheckBoxPreference android:title="Use GPS"
-    					android:key="gps">
+    					android:key="gps"
+                        android:summary="This will override Radar Selection">
     		</CheckBoxPreference>
+            <CheckBoxPreference android:title="Show My Location"
+                android:key="show_location"
+                android:summary="Display location marker on map"
+                android:dependency="gps">
+            </CheckBoxPreference>
     	</PreferenceCategory>
     	<PreferenceCategory android:title="Duration">
     		<ListPreference android:title="Duration Options"

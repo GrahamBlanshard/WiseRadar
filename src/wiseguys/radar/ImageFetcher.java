@@ -3,6 +3,7 @@ package wiseguys.radar;
 import java.util.ArrayList;
 import java.util.List;
 
+import wiseguys.radar.conn.GPSHelper;
 import wiseguys.radar.conn.ImageDownloaderThread;
 import wiseguys.radar.conn.SourceFetcherThread;
 import android.content.Context;
@@ -138,7 +139,7 @@ public class ImageFetcher {
 	    Boolean showRoadNumbers = sharedPrefs.getBoolean("roadNums",false);
 	    Boolean showTownsMore = sharedPrefs.getBoolean("addTowns",false);
 	    Boolean showRivers = sharedPrefs.getBoolean("rivers",false);
-        Boolean gps = sharedPrefs.getBoolean("gps", false);
+        Boolean showLocation = sharedPrefs.getBoolean("show_location", false);
 	    
 	    Bitmap roadImage;
 	    Bitmap townImage;
@@ -171,7 +172,7 @@ public class ImageFetcher {
 	    	overlays.add(roadNumbersImage);
 	    }
 	    
-	    return combine(overlays,gps);
+	    return combine(overlays,showLocation);
 	}
 	
 	/**
@@ -179,7 +180,7 @@ public class ImageFetcher {
 	 * @param overlays Bitmaps to combine in order
 	 * @return a single Bitmap image
 	 */
-	private Bitmap combine(List<Bitmap> overlays, boolean useGPS) {
+	private Bitmap combine(List<Bitmap> overlays, boolean showLocation) {
     	Bitmap image1 = null;
     	
     	if (overlays.size() != 0) {
@@ -187,7 +188,7 @@ public class ImageFetcher {
     		Bitmap newOverlay = Bitmap.createBitmap(image1.getWidth(), image1.getHeight(), Bitmap.Config.ARGB_8888);
     		Canvas tempCanvas = new Canvas(newOverlay);
 
-            if (useGPS) {
+            if (showLocation) {
                 tempCanvas = drawGPS(tempCanvas);
             }
 
@@ -222,12 +223,11 @@ public class ImageFetcher {
      */
     private Canvas drawGPS(Canvas canvas) {
 
-        double lat = RadarHelper.latestLocation.getLatitude();
-        double lng = RadarHelper.latestLocation.getLongitude();
-        /*
-        double cLng = GPSHelper.getClosestCityLongitude();
-        double cLat = GPSHelper.getClosestCityLatitude();
-        */
+        double lat = GPSHelper.lastGoodLat;
+        double lng = GPSHelper.lastGoodLong;
+        double cLng = GPSHelper.cityLat;
+        double cLat = GPSHelper.cityLong;
+
         Paint p = new Paint();
         float X = 20.0f;
         float Y = 20.0f;

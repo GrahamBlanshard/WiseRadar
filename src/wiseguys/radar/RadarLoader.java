@@ -54,23 +54,23 @@ public class RadarLoader extends AsyncTask<String, String, LayerDrawable> {
 	private LayerDrawable loadRadar() {
 		//Generate list of radar base images
 		imgFetch = ImageFetcher.getImageFetcher();
-		List<Bitmap> images = new ArrayList<Bitmap>();
+		List<Bitmap> images;
 	    
 		if (selectedRadarCode == null) {
 	    	return null;
 	    }
 	    
-	    publishProgress("Fetching images");
+	    publishProgress(resources.getString(R.string.dlFetch));
 
 	    int colours = Integer.valueOf(sharedPrefs.getString("pref_radar_colour","14"));
 	    images = imgFetch.getRadarImages(selectedRadarCode,selectedDuration,colours);
 	    
 	    if (images == null) {
-	    	publishProgress("Image update failed");
+	    	publishProgress(resources.getString(R.string.dlFailure));
 	    	return null;
 	    }
 	    
-	    publishProgress("Images received");
+	    publishProgress(resources.getString(R.string.dlReceived));
 	    
 	    //Drop Images into an animation
 	    anim = new AnimationDrawable();
@@ -83,12 +83,12 @@ public class RadarLoader extends AsyncTask<String, String, LayerDrawable> {
 	    	anim.addFrame(new BitmapDrawable(context.getResources(),images.get(i)), 750);
 	    }
 
-	    publishProgress("Fetching overlays");
+	    publishProgress(resources.getString(R.string.dlOverlays));
 	    
 	    //Generate Overlays
 	    Bitmap overlay = imgFetch.getOverlays(selectedRadarCode,sharedPrefs,context);
 	    
-	    publishProgress("Overlays received");
+	    publishProgress(resources.getString(R.string.dlSorting));
 	    
 	    LayerDrawable layers;
 	    
@@ -109,7 +109,7 @@ public class RadarLoader extends AsyncTask<String, String, LayerDrawable> {
 	    	layers = new LayerDrawable(layering);
 	    }
 	    
-	    publishProgress("Finishing");
+	    publishProgress(resources.getString(R.string.dlFinished));
 	    
 	    return layers;
 	}
@@ -118,7 +118,7 @@ public class RadarLoader extends AsyncTask<String, String, LayerDrawable> {
 	protected void onPostExecute (LayerDrawable result) {
 		
 		if (result == null) {
-			name.setText("No Radar Data Available");
+			name.setText(resources.getString(R.string.noRadar));
 			
 			//Back out of updates if we don't have a running animated object
 			if (anim == null) {

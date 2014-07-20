@@ -1,14 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">WiseRadar</string>
-    <string name="version">v1.2.1</string>
-    <string name="pickButton">Preferences</string>
+    <!-- Status messages -->
     <string name="radarDesc">Current active radar image</string>
+    <string name="noNetwork">Network Unavailable</string>
+    <string name="noLocation">No Radar Location Selected</string>
+    <string name="noRadar">Environment Canada Radar Temporarily Unavailable</string>
+    <string name="setPreferences">Use the menu to set your preferences</string>
+    <!-- Menu -->
     <string name="refresh">Refresh</string>
-    <string name="pick_title">Pick a Radar</string>
+    <string name="pick_title">Settings</string>
     <string name="about">About</string>
+    <string name="pickButton">Preferences</string>
     <string name="quit">Exit</string>
+    <!-- About Page -->
     <string name="about_author">About the Author</string>
     <string name="about_app">About WiseRadar</string>
+    <string name="about_changes">Latest Changes</string>
     <string name="about_license">License Details</string>
+    <!-- Progress Updates -->
+    <string name="dlFetch">Downloading Radar Images</string>
+    <string name="dlReceived">Radar Images Received</string>
+    <string name="dlFailure">Image update failed</string>
+    <string name="dlOverlays">Downloading Overlay Images</string>
+    <string name="dlSorting">Sorting Image Data</string>
+    <string name="dlFinished">Refresh Completed</string>
 </resources>

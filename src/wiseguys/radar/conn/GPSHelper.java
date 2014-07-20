@@ -20,6 +20,12 @@ public class GPSHelper {
 	private boolean GPSSetup;
 	private LocationManager locationManager;
 	private LocationListener locationListener;
+
+    public static double lastGoodLat;
+    public static double lastGoodLong;
+    public static double cityLat;
+    public static double cityLong;
+
 	
 	public GPSHelper(Context c) {
 		context = c;
@@ -104,6 +110,9 @@ public class GPSHelper {
 
 		//Setup our last known good location
 		lastKnownLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+
+        lastGoodLat = lastKnownLocation.getLatitude();
+        lastGoodLong = lastKnownLocation.getLongitude();
 		
 		GPSSetup = !locationManager.getProviders(true).isEmpty();
     }
@@ -194,6 +203,8 @@ public class GPSHelper {
 					closestDist = currDist;
 					closestName = radarNames[i];
 					closest = radarCodes[i];
+                    cityLat = lat;
+                    cityLong = lon;
 				}				
 			} catch (NumberFormatException e) {
 				return null;
@@ -204,30 +215,4 @@ public class GPSHelper {
 		
 		return closest;
 	}
-
-    public double getClosestCityLatitude(String code) {
-        String[] radarCodes = context.getResources().getStringArray(R.array.radar_codes);
-        String[] radarLats = context.getResources().getStringArray(R.array.city_lat_vals);
-
-        for (int i = 0; i < radarCodes.length; i++) {
-            if (radarCodes[i].equals(code)) {
-                return Double.parseDouble(radarLats[i]);
-            }
-        }
-
-        return -1;
-    }
-
-    public double getClosestCityLongitude(String code) {
-        String[] radarCodes = context.getResources().getStringArray(R.array.radar_codes);
-        String[] radarLongs = context.getResources().getStringArray(R.array.city_long_vals);
-
-        for (int i = 0; i < radarCodes.length; i++) {
-            if (radarCodes[i].equals(code)) {
-                return Double.parseDouble(radarLongs[i]);
-            }
-        }
-
-        return -1;
-    }
 }
