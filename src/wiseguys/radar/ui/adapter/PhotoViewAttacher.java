@@ -31,11 +31,6 @@ import android.widget.ImageView.ScaleType;
 
 import java.lang.ref.WeakReference;
 
-import wiseguys.radar.ui.adapter.Compat;
-import wiseguys.radar.ui.adapter.IPhotoView;
-import wiseguys.radar.ui.adapter.PhotoView;
-import wiseguys.radar.ui.adapter.ScrollerProxy;
-
 public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener, VersionedGestureDetector.OnGestureListener,
 		GestureDetector.OnDoubleTapListener, ViewTreeObserver.OnGlobalLayoutListener {
 

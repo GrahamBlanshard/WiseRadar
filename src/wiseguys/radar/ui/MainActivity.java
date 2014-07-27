@@ -1,6 +1,5 @@
 package wiseguys.radar.ui;
 
-import wiseguys.radar.R;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.Intent;
@@ -9,6 +8,8 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+
+import wiseguys.radar.R;
 
 public class MainActivity extends Activity {
 

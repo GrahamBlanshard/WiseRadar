@@ -1,17 +1,15 @@
 package wiseguys.radar.ui;
 
-import wiseguys.radar.R;
-import wiseguys.radar.RadarHelper;
-import android.app.Activity;
-import android.app.Dialog;
 import android.app.Fragment;
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+
+import wiseguys.radar.R;
+import wiseguys.radar.RadarHelper;
 
 public class AboutFragment extends Fragment {
     private static final int ABOUT_AUTHOR_ID = 0;

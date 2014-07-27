@@ -19,8 +19,6 @@ import android.graphics.RectF;
 import android.view.View;
 import android.widget.ImageView;
 
-import wiseguys.radar.ui.adapter.PhotoViewAttacher;
-
 
 public interface IPhotoView {
     /**

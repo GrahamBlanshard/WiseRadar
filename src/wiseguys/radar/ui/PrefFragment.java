@@ -1,13 +1,11 @@
 package wiseguys.radar.ui;
 
-import wiseguys.radar.R;
-
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
-import android.preference.Preference;
-import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
+
+import wiseguys.radar.R;
 
 public class PrefFragment extends PreferenceFragment {
 

@@ -15,16 +15,16 @@
  *******************************************************************************/
 package wiseguys.radar.ui.adapter;
 
-import wiseguys.radar.ui.adapter.PhotoViewAttacher;
-import wiseguys.radar.ui.adapter.PhotoViewAttacher.OnMatrixChangedListener;
-import wiseguys.radar.ui.adapter.PhotoViewAttacher.OnPhotoTapListener;
-import wiseguys.radar.ui.adapter.PhotoViewAttacher.OnViewTapListener;
 import android.content.Context;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.util.AttributeSet;
 import android.widget.ImageView;
+
+import wiseguys.radar.ui.adapter.PhotoViewAttacher.OnMatrixChangedListener;
+import wiseguys.radar.ui.adapter.PhotoViewAttacher.OnPhotoTapListener;
+import wiseguys.radar.ui.adapter.PhotoViewAttacher.OnViewTapListener;
 
 public class PhotoView extends ImageView implements IPhotoView {
 
