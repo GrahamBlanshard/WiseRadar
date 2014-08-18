@@ -12,7 +12,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 
-import wiseguys.radar.RadarHelper;
+import wiseguys.radar.helpers.RadarHelper;
 
 public class SourceFetcherThread extends Thread {
 

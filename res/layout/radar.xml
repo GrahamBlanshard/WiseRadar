@@ -13,14 +13,25 @@
         android:layout_marginTop="10dp"
         android:textSize="25sp" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/locationWarning"
+        android:layout_below="@+id/radarName"
+        android:layout_marginTop="10dp"
+        android:layout_centerHorizontal="true"
+        android:text="@+string/location_warning"
+        android:textSize="10sp" />
+
     <ImageView
         android:id="@+id/radarImage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/radarName"
+        android:layout_below="@+id/locationWarning"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="15dp"
         android:contentDescription="@string/radarDesc"
         android:src="@drawable/radar_circle"
         />
+
 </RelativeLayout>

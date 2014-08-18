@@ -19,9 +19,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import wiseguys.radar.R;
-import wiseguys.radar.RadarHelper;
+import wiseguys.radar.helpers.RadarHelper;
 import wiseguys.radar.RadarLoader;
-import wiseguys.radar.conn.GPSHelper;
+import wiseguys.radar.helpers.GPSHelper;
 import wiseguys.radar.ui.adapter.PhotoViewAttacher;
 
 public class RadarFragment extends Fragment {
@@ -92,6 +92,7 @@ public class RadarFragment extends Fragment {
      * Re-receive the images on command
      */
     public void refresh() {
+        TextView warn = (TextView) activity.findViewById(R.id.locationWarning);
         TextView radarName = (TextView) activity.findViewById(R.id.radarName);
         ImageView sImage = (ImageView) activity.findViewById(R.id.radarImage);
         String selectedRadarCode = sharedPrefs.getString("pref_radar_code", "new");
@@ -153,6 +154,8 @@ public class RadarFragment extends Fragment {
             layoutParams.width = screenWidth;
             sImage.setLayoutParams(layoutParams);
         }
+
+        warn.setVisibility(sharedPrefs.getBoolean("gps",false) ? View.VISIBLE : View.INVISIBLE);
 
         updateAdapter(sImage);
     }

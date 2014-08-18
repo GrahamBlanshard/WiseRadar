@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">WiseRadar</string>
+    <string name="location_warning">GPS features are not 100% guaranteed!</string>
     <!-- Status messages -->
     <string name="radarDesc">Current active radar image</string>
     <string name="noNetwork">Network Unavailable</string>

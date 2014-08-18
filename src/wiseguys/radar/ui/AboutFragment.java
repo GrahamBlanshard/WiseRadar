@@ -9,7 +9,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import wiseguys.radar.R;
-import wiseguys.radar.RadarHelper;
+import wiseguys.radar.helpers.RadarHelper;
 
 public class AboutFragment extends Fragment {
     private static final int ABOUT_AUTHOR_ID = 0;

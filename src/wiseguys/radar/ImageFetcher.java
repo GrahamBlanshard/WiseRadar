@@ -3,9 +3,11 @@ package wiseguys.radar;
 import java.util.ArrayList;
 import java.util.List;
 
-import wiseguys.radar.conn.GPSHelper;
+import wiseguys.radar.helpers.GPSHelper;
 import wiseguys.radar.conn.ImageDownloaderThread;
 import wiseguys.radar.conn.SourceFetcherThread;
+import wiseguys.radar.helpers.RadarHelper;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -14,6 +16,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.location.Location;
 
 public class ImageFetcher {
 	
@@ -139,7 +142,7 @@ public class ImageFetcher {
 	    Boolean showRoadNumbers = sharedPrefs.getBoolean("roadNums",false);
 	    Boolean showTownsMore = sharedPrefs.getBoolean("addTowns",false);
 	    Boolean showRivers = sharedPrefs.getBoolean("rivers",false);
-        Boolean showLocation = sharedPrefs.getBoolean("show_location", false);
+        Boolean showLocation = sharedPrefs.getBoolean("show_location", false) && sharedPrefs.getBoolean("gps",false);
 	    
 	    Bitmap roadImage;
 	    Bitmap townImage;
@@ -217,34 +220,57 @@ public class ImageFetcher {
     }
 
     /***
-     * TODO:
-     * - GPSHelper, set a static value for lat/long when the closest city is first determined!
-     * - sharedPrefs, give user an option to show their location or not
+     * Good resources:
+     *  - http://williams.best.vwh.net/avform.htm#LL
+     *  - http://www.freemaptools.com/radius-around-point.htm
      */
     private Canvas drawGPS(Canvas canvas) {
+        Paint p = new Paint();
+        float size = 6.0f;
 
         double lat = GPSHelper.lastGoodLat;
         double lng = GPSHelper.lastGoodLong;
-        double cLng = GPSHelper.cityLat;
-        double cLat = GPSHelper.cityLong;
-
-        Paint p = new Paint();
-        float X = 20.0f;
-        float Y = 20.0f;
-        float size = 8.0f;
-
-
-        p.setColor(Color.BLACK);
-        canvas.drawCircle(X,Y,size,p);
-        p.setColor(Color.WHITE);
-        canvas.drawCircle(X,Y,size*0.75f,p);
 
         /**
-         * Determine our location based on knowledge that mid map is our town lat/long
+         * Radar is located center of image && 240km from edges
          */
+        final double latOf240km = 2.155293; //Estimates
+        final double longOf240km = 3.434171;
+        double midLat = GPSHelper.radarLat;
+        double midLong = GPSHelper.radarLong;
 
+        double horizPixels = canvas.getWidth();
+        double vertPixels = canvas.getHeight();
+        double midPixelHoriz = horizPixels / 2;
+        double midPixelVert = vertPixels / 2;
+
+        double TLLat = midLat + latOf240km;
+        double TLLong = midLong - longOf240km;
+
+        //We now have our two coordinate systems with points in the top-left and center
+        float circleY = normalize((float)lat,(float)TLLat,(float)midLat) * (float)midPixelHoriz;
+        float circleX = normalize((float)lng,(float)TLLong,(float)midLong) * (float)midPixelVert;
+
+        p.setColor(Color.BLACK);
+        canvas.drawCircle(circleX,circleY,size,p);
+        p.setColor(Color.WHITE);
+        canvas.drawCircle(circleX,circleY,size*0.75f,p);
 
         return canvas;
+    }
+
+    /**
+     * Used for converting our coordinate systems
+     * @param value - Point we're normalizing
+     * @param min - Top || Left point of view
+     * @param max - Radar point
+     * @return - A normalized point from 0-2. 1 being center of screen
+     */
+    private float normalize(float value, float min, float max) {
+        float a = value - min;
+        float b = max - min;
+        float c = Math.abs(Math.abs(Math.abs(value) - Math.abs(min)) / Math.abs(Math.abs(max) - Math.abs(min)));
+        return Math.abs((value - min) / (max - min));
     }
 
     private Bitmap fixBackground(Bitmap img) {
@@ -307,7 +333,6 @@ public class ImageFetcher {
                 }
                 newList.add(img);
             }
-
         } else {
             for (String img : images) {
                 if (img.contains("/detailed/")) {
