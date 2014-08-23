@@ -25,6 +25,18 @@ public class ImageFetcher {
 	private List<Bitmap> latestImages = null;
 	private boolean finished;
 	private boolean failedPreviously;
+    private String lastSuccessfulCode;
+
+    /*
+      Transparent Colour Values
+      Unused in code, but handy to have
+        private final int TRANSPARENT_BLACK = -16777216;
+        private final int TRANSPARENT_WHITE = -1;
+        private final int TRANSPARENT_GREEN = -10319613;
+        private final int TRANSPARENT_GRAY = -11570469;
+                                             -11579569;
+        private final int TRANSPARENT_RED = -15724432;
+     */
 
 	/**
 	 * Singleton constructor
@@ -87,14 +99,23 @@ public class ImageFetcher {
 		
 		if (!setupFetch(code,duration)) {
 			finished = true;
-			return latestImages;
+
+            if (code.equals(lastSuccessfulCode)) {
+                return latestImages;
+            } else {
+                return null;
+            }
 		}
 				
 		radarImgUrls = RadarHelper.parseRadarImages(htmlFetch.getSource());
 		
 		//Source parsing failed; likely due to a lack of images provided from the host
 		if (radarImgUrls == null) {
-			return latestImages;
+            if (code.equals(lastSuccessfulCode)) {
+                return latestImages;
+            } else {
+                return null;
+            }
 		}
 
         radarImgUrls = changeDetail(radarImgUrls,colours);
@@ -103,7 +124,11 @@ public class ImageFetcher {
 			Bitmap newImage = getImage(imageURL);
 			
 			if (newImage == null) {
-				return latestImages; //We failed. Return last set
+                if (code.equals(lastSuccessfulCode)) {
+                    return latestImages;
+                } else {
+                    return null;
+                }
 			} else {
 				images.add(newImage);
 			}
@@ -112,6 +137,7 @@ public class ImageFetcher {
 		failedPreviously = false;
 		finished = true;
 		latestImages = images;
+        lastSuccessfulCode = code;
 		return images;
 	}
 	
@@ -234,8 +260,8 @@ public class ImageFetcher {
         /**
          * Radar is located center of image && 240km from edges
          */
-        final double latOf240km = 2.155293; //Estimates
-        final double longOf240km = 3.434171;
+        final double latOf240km = 2.155; //Estimates, should be accurate for our small section of the earth
+        final double longOf240km = 3.406; //Anything exact requires additional API calls for eliptical calcs
         double midLat = GPSHelper.radarLat;
         double midLong = GPSHelper.radarLong;
 
@@ -244,8 +270,8 @@ public class ImageFetcher {
         double midPixelHoriz = horizPixels / 2;
         double midPixelVert = vertPixels / 2;
 
-        double TLLat = midLat + latOf240km;
-        double TLLong = midLong - longOf240km;
+        double TLLat = midLat + latOf240km;     //northern-most point on map
+        double TLLong = midLong - longOf240km;  //western-most point on map
 
         //We now have our two coordinate systems with points in the top-left and center
         float circleY = normalize((float)lat,(float)TLLat,(float)midLat) * (float)midPixelHoriz;
@@ -267,9 +293,6 @@ public class ImageFetcher {
      * @return - A normalized point from 0-2. 1 being center of screen
      */
     private float normalize(float value, float min, float max) {
-        float a = value - min;
-        float b = max - min;
-        float c = Math.abs(Math.abs(Math.abs(value) - Math.abs(min)) / Math.abs(Math.abs(max) - Math.abs(min)));
         return Math.abs((value - min) / (max - min));
     }
 
@@ -283,10 +306,26 @@ public class ImageFetcher {
         int[] pixels = new int[width * height];
         img.getPixels(pixels,0,width,0,0,width,height);
 
-        int color = (pixels[0] == -1) ? -1 : -16777216; //-1 for white background | -16777216 for black
+        int colour = pixels[0];
+
+        if (htmlFetch.getCode().equals("xbu") ||
+            htmlFetch.getCode().equals("wkr") ||
+            htmlFetch.getCode().equals("wmn") ||
+            htmlFetch.getCode().equals("wtp")) {
+            /*
+            Special case scenarios --
+                Radar Overlays use different transparent values in top corner
+                    compared to the rest of overlay
+                Schuler AB      (xbu)   Uses -11570469
+                King City ON    (wkr)   Uses -15724432
+                McGill QB       (wmn)   Uses -11579569
+                Holyrood NL     (wtp)   Uses -11570569
+            */
+            colour = pixels[5];
+        }
 
         for (int i = 0; i < pixels.length; i++) {
-            if (pixels[i] == color) {
+            if (pixels[i] == colour) {
                 pixels[i] = 0;
             }
         }

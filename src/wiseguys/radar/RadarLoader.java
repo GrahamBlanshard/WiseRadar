@@ -49,7 +49,6 @@ public class RadarLoader extends AsyncTask<String, String, LayerDrawable> {
 	
 	/**
      * Loads the radar screen
-     * @param 
      */
 	private LayerDrawable loadRadar() {
 		//Generate list of radar base images

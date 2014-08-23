@@ -76,6 +76,8 @@ public class GPSHelper {
 		    	if (newLocationIsBetter(location)) {
 		    		lastKnownLocation = location;
                     RadarHelper.latestLocation = location;
+                    lastGoodLat = lastKnownLocation.getLatitude();
+                    lastGoodLong = lastKnownLocation.getLongitude();
 		    	}
 		    }
 
@@ -110,10 +112,6 @@ public class GPSHelper {
 
 		//Setup our last known good location
 		lastKnownLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-
-        lastGoodLat = lastKnownLocation.getLatitude();
-        lastGoodLong = lastKnownLocation.getLongitude();
-		
 		GPSSetup = !locationManager.getProviders(true).isEmpty();
     }
 
