@@ -20,6 +20,7 @@ public class RadarHelper {
 	//http://weather.gc.ca/radar/index_e.html?id=<CODE>
 	public static final int TEN_MINUTES = 600000;
     public static Location latestLocation;
+    public static float density;
 	
 	public static String codeToName(String code, Context systemContext) {
 		//Test to make sure we're ready to accept it
@@ -44,7 +45,8 @@ public class RadarHelper {
 		if (index == radarCodes.length) {
 			throw new IllegalArgumentException();
 		}
-		
+
+        density = systemContext.getResources().getDisplayMetrics().density;
 		
 		return radarNames[index];
 	}

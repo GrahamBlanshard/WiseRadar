@@ -113,7 +113,7 @@ public class AboutFragment extends Fragment {
         					   " be located online at https://github.com/GrahamBlanshard/WiseRadar\n\n";
             break;
         case ABOUT_LATEST:
-            about = "v2.0 (July 2014)\n" +
+            about = "v2.0 (September 2014)\n" +
                     "- Option to show current location on radar\n" +
                     "- Numerous bug fixes\n" +
                     "- More modern UI handling\n\n";

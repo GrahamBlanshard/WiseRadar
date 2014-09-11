@@ -200,8 +200,11 @@ public class ImageFetcher {
 	    	roadNumbersImage = getRoadNumbers(selectedRadarCode);
 	    	overlays.add(roadNumbersImage);
 	    }
-	    
-	    return combine(overlays,showLocation);
+
+        if (overlays.size() > 0)
+	        return combine(overlays,showLocation,latestImages.get(0).getHeight());
+        else
+            return Bitmap.createBitmap(latestImages.get(0).getHeight(),latestImages.get(0).getHeight(),Bitmap.Config.ARGB_8888);
 	}
 	
 	/**
@@ -209,38 +212,33 @@ public class ImageFetcher {
 	 * @param overlays Bitmaps to combine in order
 	 * @return a single Bitmap image
 	 */
-	private Bitmap combine(List<Bitmap> overlays, boolean showLocation) {
-    	Bitmap image1 = null;
-    	
-    	if (overlays.size() != 0) {
-    		image1 = overlays.get(0);
-    		Bitmap newOverlay = Bitmap.createBitmap(image1.getWidth(), image1.getHeight(), Bitmap.Config.ARGB_8888);
-    		Canvas tempCanvas = new Canvas(newOverlay);
+	private Bitmap combine(List<Bitmap> overlays, boolean showLocation, int size) {
+    	Bitmap image1;
+        Canvas tempCanvas;
 
-            if (showLocation) {
-                tempCanvas = drawGPS(tempCanvas);
+        Bitmap newOverlay = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888);
+        tempCanvas = new Canvas(newOverlay);
+
+        for (int i = 0; i < overlays.size(); i++) {
+            Bitmap overlay = overlays.get(i);
+
+            int w = overlay.getWidth();
+            int h = overlay.getHeight();
+
+            if ( overlay.getWidth() > size || overlay.getHeight() > size ) {
+                Matrix m = new Matrix();
+                m.setScale( ((float)size / (float)overlay.getWidth()),( (float)size / (float)overlay.getHeight() ) );
+                overlay = Bitmap.createBitmap(overlay, 0, 0, overlay.getWidth(), overlay.getHeight(), m, false);
             }
 
-            Bitmap base = fixBackground(image1);
-    		tempCanvas.drawBitmap(base, new Matrix(), null);
+            tempCanvas.drawBitmap( fixBackground(overlay), 0, 0, null);
+        }
 
-            int w = newOverlay.getWidth();
-            int h = newOverlay.getHeight();
-    		
-    		for (int i = 1; i < overlays.size(); i++) {
-                Bitmap overlay = overlays.get(i);
+        if (showLocation) {
+            drawGPS(tempCanvas);
+        }
 
-                if ( overlay.getWidth() > w || overlay.getHeight() > h ) {
-                    Matrix m = new Matrix();
-                    m.setScale( ((float)w / (float)overlay.getWidth()),( (float)h / (float)overlay.getHeight() ) );
-                    overlay = Bitmap.createBitmap(overlay, 0, 0, overlay.getWidth(), overlay.getHeight(), m, false);
-                }
-
-    			tempCanvas.drawBitmap( fixBackground(overlay), 0, 0, null);
-    		}
-
-    		image1 = Bitmap.createBitmap(newOverlay, 0, 0, newOverlay.getWidth(), newOverlay.getHeight());
-    	}
+        image1 = Bitmap.createBitmap(newOverlay, 0, 0, newOverlay.getWidth(), newOverlay.getHeight());
     	
     	return image1;
     }
@@ -250,9 +248,9 @@ public class ImageFetcher {
      *  - http://williams.best.vwh.net/avform.htm#LL
      *  - http://www.freemaptools.com/radius-around-point.htm
      */
-    private Canvas drawGPS(Canvas canvas) {
+    private void drawGPS(Canvas canvas) {
         Paint p = new Paint();
-        float size = 6.0f;
+        float size = 4.0f * RadarHelper.density * 0.5f;
 
         double lat = GPSHelper.lastGoodLat;
         double lng = GPSHelper.lastGoodLong;
@@ -281,8 +279,6 @@ public class ImageFetcher {
         canvas.drawCircle(circleX,circleY,size,p);
         p.setColor(Color.WHITE);
         canvas.drawCircle(circleX,circleY,size*0.75f,p);
-
-        return canvas;
     }
 
     /**
