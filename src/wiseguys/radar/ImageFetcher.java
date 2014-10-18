@@ -20,12 +20,12 @@ import android.graphics.Paint;
 import android.location.Location;
 
 public class ImageFetcher {
-	
-	private static ImageFetcher imgFetch;
-	private SourceFetcherThread htmlFetch;
-	private List<Bitmap> latestImages = null;
-	private boolean finished;
-	private boolean failedPreviously;
+
+    private static ImageFetcher imgFetch;
+    private SourceFetcherThread htmlFetch;
+    private List<Bitmap> latestImages = null;
+    private boolean finished;
+    private boolean failedPreviously;
     private String lastSuccessfulCode;
 
     /*
@@ -39,163 +39,163 @@ public class ImageFetcher {
         private final int TRANSPARENT_RED = -15724432;
      */
 
-	/**
-	 * Singleton constructor
-	 */
-	private ImageFetcher() {	
-		failedPreviously = false;		
-	}
-	
-	/**
-	 * Static class for singleton
-	 * @return instance of this class
-	 */
-	public static ImageFetcher getImageFetcher() {
-		if (imgFetch == null) {
-			imgFetch = new ImageFetcher();
-		} 
-		return imgFetch;
-	}
-	
-	/**
-	 * Checks and executes the code download if necessary
-	 * @param code radar site code
-	 * @return true when an updated is required
-	 */
-	private boolean setupFetch(String code) {
-		if (htmlFetch != null) {
-			//Skip update when we are looking at the same radar, or last attempt had failed
+    /**
+     * Singleton constructor
+     */
+    private ImageFetcher() {
+        failedPreviously = false;
+    }
+
+    /**
+     * Static class for singleton
+     * @return instance of this class
+     */
+    public static ImageFetcher getImageFetcher() {
+        if (imgFetch == null) {
+            imgFetch = new ImageFetcher();
+        }
+        return imgFetch;
+    }
+
+    /**
+     * Checks and executes the code download if necessary
+     * @param code radar site code
+     * @return true when an updated is required
+     */
+    private boolean setupFetch(String code) {
+        if (htmlFetch != null) {
+            //Skip update when we are looking at the same radar, or last attempt had failed
             return !(htmlFetch.getCode().equals(code) && !failedPreviously) && getRadarFromConnection(code);
-		}  else {			
-			return getRadarFromConnection(code);
-		}
-	}
-	
-	/**
-	 * Downloads the Radar data using a thread.
-	 * @param code radar code
-	 * @return true when we get a successful html download
-	 */
-	private boolean getRadarFromConnection(String code) {
-		htmlFetch = new SourceFetcherThread();
-		htmlFetch.setCode(code);
-		htmlFetch.start();
-		
-		try {
-			htmlFetch.join();			
-		} catch (InterruptedException e) {
-			failedPreviously = true;
-			return false;
-		}
-		
-		return true;
-	}
+        }  else {
+            return getRadarFromConnection(code);
+        }
+    }
 
-	public List<Bitmap> getRadarImages(String code, String duration, int colours) {
-		
-		finished = false;
-		List<Bitmap> images = new ArrayList<Bitmap>();
-		List<String> radarImgUrls;
-		
-		if (!setupFetch(code)) {
-			finished = true;
+    /**
+     * Downloads the Radar data using a thread.
+     * @param code radar code
+     * @return true when we get a successful html download
+     */
+    private boolean getRadarFromConnection(String code) {
+        htmlFetch = new SourceFetcherThread();
+        htmlFetch.setCode(code);
+        htmlFetch.start();
+
+        try {
+            htmlFetch.join();
+        } catch (InterruptedException e) {
+            failedPreviously = true;
+            return false;
+        }
+
+        return true;
+    }
+
+    public List<Bitmap> getRadarImages(String code, String duration, int colours) {
+
+        finished = false;
+        List<Bitmap> images = new ArrayList<Bitmap>();
+        List<String> radarImgUrls;
+
+        if (!setupFetch(code)) {
+            finished = true;
 
             if (code.equals(lastSuccessfulCode)) {
                 return latestImages;
             } else {
                 return null;
             }
-		}
-				
-		radarImgUrls = RadarHelper.parseRadarImages(htmlFetch.getSource(), duration, colours);
-		
-		//Source parsing failed; likely due to a lack of images provided from the host
-		if (radarImgUrls == null) {
+        }
+
+        radarImgUrls = RadarHelper.parseRadarImages(htmlFetch.getSource(), duration, colours);
+
+        //Source parsing failed; likely due to a lack of images provided from the host
+        if (radarImgUrls == null) {
             if (code.equals(lastSuccessfulCode)) {
                 return latestImages;
             } else {
                 return null;
             }
-		}
-		
-		for (String imageURL : radarImgUrls) {
-			Bitmap newImage = getImage(imageURL);
-			
-			if (newImage == null) {
+        }
+
+        for (String imageURL : radarImgUrls) {
+            Bitmap newImage = getImage(imageURL);
+
+            if (newImage == null) {
                 if (code.equals(lastSuccessfulCode)) {
                     return latestImages;
                 } else {
                     return null;
                 }
-			} else {
-				images.add(newImage);
-			}
-		}		
-		
-		failedPreviously = false;
-		finished = true;
-		latestImages = images;
-        lastSuccessfulCode = code;
-		return images;
-	}
-	
-	/**
-	 * Fetches image at the given URL
-	 * @param URL URL of image
-	 * @return Bitmap of image from URL
-	 */
-	public Bitmap getImage(String URL) {
-		ImageDownloaderThread imgDown = new ImageDownloaderThread(URL);
-		imgDown.start();
-		try {
-			imgDown.join();
-		} catch (InterruptedException ie) {			
-			failedPreviously = true;
-			return null;
-		}
-		return imgDown.getImage();
-	}
-	
-	public Bitmap getOverlays(String selectedRadarCode, SharedPreferences sharedPrefs, Context context) {
-		List<Bitmap> overlays = new ArrayList<Bitmap>();
-		
-		//Fetch our overlay preferences
-	    Boolean showRoads = sharedPrefs.getBoolean("roads",false);
-	    Boolean showTowns = sharedPrefs.getBoolean("towns",false);
-	    Boolean showRadarCircles = sharedPrefs.getBoolean("circles",false);
-	    Boolean showRoadNumbers = sharedPrefs.getBoolean("roadNums",false);
-	    Boolean showTownsMore = sharedPrefs.getBoolean("addTowns",false);
-	    Boolean showRivers = sharedPrefs.getBoolean("rivers",false);
-        Boolean showLocation = sharedPrefs.getBoolean("show_location", false) && sharedPrefs.getBoolean("gps",false);
-	    
-	    Bitmap roadImage;
-	    Bitmap townImage;
-	    Bitmap townsMoreImage;
-	    Bitmap riverImage;
-	    Bitmap roadNumbersImage;
-	    Bitmap radarCircles = BitmapFactory.decodeResource(context.getResources(),R.drawable.radar_circle);
-	    
-	    if (showRoads) {
-	    	roadImage = getRoads(selectedRadarCode);
-	    	overlays.add(roadImage);
-	    } 
-	    if (showTowns) {
-	    	townImage = getTowns(selectedRadarCode);
-	    	overlays.add(townImage);
-	    } 
+            } else {
+                images.add(newImage);
+            }
+        }
 
-	    if (showTownsMore) {
-	    	townsMoreImage = getTownsMore(selectedRadarCode);
-	    	overlays.add(townsMoreImage);
-	    }
-	    if (showRivers) {
-	    	riverImage = getRivers(selectedRadarCode);
-	    	overlays.add(riverImage);
-	    }
-	    if (showRoadNumbers) {
-	    	roadNumbersImage = getRoadNumbers(selectedRadarCode);
-	    	overlays.add(roadNumbersImage);
-	    }
+        failedPreviously = false;
+        finished = true;
+        latestImages = images;
+        lastSuccessfulCode = code;
+        return images;
+    }
+
+    /**
+     * Fetches image at the given URL
+     * @param URL URL of image
+     * @return Bitmap of image from URL
+     */
+    public Bitmap getImage(String URL) {
+        ImageDownloaderThread imgDown = new ImageDownloaderThread(URL);
+        imgDown.start();
+        try {
+            imgDown.join();
+        } catch (InterruptedException ie) {
+            failedPreviously = true;
+            return null;
+        }
+        return imgDown.getImage();
+    }
+
+    public Bitmap getOverlays(String selectedRadarCode, SharedPreferences sharedPrefs, Context context) {
+        List<Bitmap> overlays = new ArrayList<Bitmap>();
+
+        //Fetch our overlay preferences
+        Boolean showRoads = sharedPrefs.getBoolean("roads",false);
+        Boolean showTowns = sharedPrefs.getBoolean("towns",false);
+        Boolean showRadarCircles = sharedPrefs.getBoolean("circles",false);
+        Boolean showRoadNumbers = sharedPrefs.getBoolean("roadNums",false);
+        Boolean showTownsMore = sharedPrefs.getBoolean("addTowns",false);
+        Boolean showRivers = sharedPrefs.getBoolean("rivers",false);
+        Boolean showLocation = sharedPrefs.getBoolean("show_location", false) && sharedPrefs.getBoolean("gps",false);
+
+        Bitmap roadImage;
+        Bitmap townImage;
+        Bitmap townsMoreImage;
+        Bitmap riverImage;
+        Bitmap roadNumbersImage;
+        Bitmap radarCircles = BitmapFactory.decodeResource(context.getResources(),R.drawable.radar_circle);
+
+        if (showRoads) {
+            roadImage = getRoads(selectedRadarCode);
+            overlays.add(roadImage);
+        }
+        if (showTowns) {
+            townImage = getTowns(selectedRadarCode);
+            overlays.add(townImage);
+        }
+
+        if (showTownsMore) {
+            townsMoreImage = getTownsMore(selectedRadarCode);
+            overlays.add(townsMoreImage);
+        }
+        if (showRivers) {
+            riverImage = getRivers(selectedRadarCode);
+            overlays.add(riverImage);
+        }
+        if (showRoadNumbers) {
+            roadNumbersImage = getRoadNumbers(selectedRadarCode);
+            overlays.add(roadNumbersImage);
+        }
 
         //Note Circles always added last
         if (showRadarCircles) {
@@ -203,18 +203,18 @@ public class ImageFetcher {
         }
 
         if (overlays.size() > 0)
-	        return combine(overlays,showLocation,latestImages.get(0).getHeight(),latestImages.get(0).getWidth(),showRadarCircles);
+            return combine(overlays,showLocation,latestImages.get(0).getHeight(),latestImages.get(0).getWidth(),showRadarCircles);
         else
             return Bitmap.createBitmap(latestImages.get(0).getHeight(),latestImages.get(0).getHeight(),Bitmap.Config.ARGB_8888);
-	}
-	
-	/**
-	 * Combines the given list of Bitmaps to a single image
-	 * @param overlays Bitmaps to combine in order
-	 * @return a single Bitmap image
-	 */
-	private Bitmap combine(List<Bitmap> overlays, boolean showLocation, int vSize, int hSize, boolean showCircles) {
-    	Bitmap image1;
+    }
+
+    /**
+     * Combines the given list of Bitmaps to a single image
+     * @param overlays Bitmaps to combine in order
+     * @return a single Bitmap image
+     */
+    private Bitmap combine(List<Bitmap> overlays, boolean showLocation, int vSize, int hSize, boolean showCircles) {
+        Bitmap image1;
         Canvas tempCanvas;
 
         Bitmap newOverlay = Bitmap.createBitmap(hSize, vSize, Bitmap.Config.ARGB_8888);
@@ -246,8 +246,8 @@ public class ImageFetcher {
         }
 
         image1 = Bitmap.createBitmap(newOverlay, 0, 0, newOverlay.getWidth(), newOverlay.getHeight());
-    	
-    	return image1;
+
+        return image1;
     }
 
     /***
@@ -270,17 +270,15 @@ public class ImageFetcher {
         double midLat = GPSHelper.radarLat;
         double midLong = GPSHelper.radarLong;
 
-        double horizPixels = canvas.getWidth();
-        double vertPixels = canvas.getHeight();
-        double midPixelHoriz = horizPixels / 2;
-        double midPixelVert = vertPixels / 2;
+        double sqPixels = canvas.getHeight(); //Because we want to work off the square radar image, not the right side legend
+        double midSqPixel = sqPixels / 2;
 
         double TLLat = midLat + latOf240km;     //northern-most point on map
         double TLLong = midLong - longOf240km;  //western-most point on map
 
         //We now have our two coordinate systems with points in the top-left and center
-        float circleY = normalize((float)lat,(float)TLLat,(float)midLat) * (float)midPixelHoriz;
-        float circleX = normalize((float)lng,(float)TLLong,(float)midLong) * (float)midPixelVert;
+        float circleY = normalize((float)lat,(float)TLLat,(float)midLat) * (float)midSqPixel;
+        float circleX = normalize((float)lng,(float)TLLong,(float)midLong) * (float)midSqPixel;
 
         p.setColor(Color.BLACK);
         canvas.drawCircle(circleX,circleY,size,p);
@@ -312,9 +310,9 @@ public class ImageFetcher {
         int colour = pixels[0];
 
         if (htmlFetch.getCode().equals("xbu") ||
-            htmlFetch.getCode().equals("wkr") ||
-            htmlFetch.getCode().equals("wmn") ||
-            htmlFetch.getCode().equals("wtp")) {
+                htmlFetch.getCode().equals("wkr") ||
+                htmlFetch.getCode().equals("wmn") ||
+                htmlFetch.getCode().equals("wtp")) {
             /*
             Special case scenarios --
                 Radar Overlays use different transparent values in top corner
@@ -337,38 +335,38 @@ public class ImageFetcher {
 
         return copy;
     }
-	
-	private Bitmap getRoads(String code) {
-    	//String roadImageURL = "/radar/images/layers/roads/" + code.toUpperCase() + "_roads.gif";
-		String roadImageURL = RadarHelper.baseURL + "/cacheable/images/radar/layers/roads/" + code.toUpperCase() + "_roads.gif";
-    	return imgFetch.getImage(roadImageURL);
+
+    private Bitmap getRoads(String code) {
+        //String roadImageURL = "/radar/images/layers/roads/" + code.toUpperCase() + "_roads.gif";
+        String roadImageURL = RadarHelper.baseURL + "/cacheable/images/radar/layers/roads/" + code.toUpperCase() + "_roads.gif";
+        return imgFetch.getImage(roadImageURL);
     }
-    
+
     private Bitmap getTowns(String code) {
-    	String townImageURL = RadarHelper.baseURL + "/cacheable/images/radar/layers/default_cities/" + code + "_towns.gif";
-    	return imgFetch.getImage(townImageURL);
+        String townImageURL = RadarHelper.baseURL + "/cacheable/images/radar/layers/default_cities/" + code + "_towns.gif";
+        return imgFetch.getImage(townImageURL);
     }
-    
+
     private Bitmap getTownsMore(String code) {
-    	String townImageURL = RadarHelper.baseURL + "/cacheable/images/radar/layers/additional_cities/" + code + "_towns.gif";
-    	return imgFetch.getImage(townImageURL);
+        String townImageURL = RadarHelper.baseURL + "/cacheable/images/radar/layers/additional_cities/" + code + "_towns.gif";
+        return imgFetch.getImage(townImageURL);
     }
-    
+
     private Bitmap getRoadNumbers(String code) {
-    	String roadNumURL = RadarHelper.baseURL + "/cacheable/images/radar/layers/road_labels/" + code + "_labs.gif";
-    	return imgFetch.getImage(roadNumURL);
+        String roadNumURL = RadarHelper.baseURL + "/cacheable/images/radar/layers/road_labels/" + code + "_labs.gif";
+        return imgFetch.getImage(roadNumURL);
     }
-    
+
     private Bitmap getRivers(String code) {
-    	String riverURL = RadarHelper.baseURL + "/cacheable/images/radar/layers/rivers/" + code + "_rivers.gif";
-    	return imgFetch.getImage(riverURL);
+        String riverURL = RadarHelper.baseURL + "/cacheable/images/radar/layers/rivers/" + code + "_rivers.gif";
+        return imgFetch.getImage(riverURL);
     }
-    
+
     /**
      * Call to ensure this thread finished in full
      * @return true if we completed all operations
      */
     public boolean finished() {
-    	return finished;
+        return finished;
     }
 }

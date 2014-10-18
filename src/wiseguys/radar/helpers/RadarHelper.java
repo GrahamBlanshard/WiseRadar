@@ -87,23 +87,14 @@ public class RadarHelper {
 
             while (m.find()) {
                 String image = m.group(1);
-                String prefix = image.substring(0,3);
+                String prefix = image.substring(0,image.indexOf("_PRECIP"));
                 String imageURL = (depth == 14 ? RadarHelper.c14ImageURL : RadarHelper.c8ImageURL) + prefix + "/" + image + ".GIF";
+
                 if (!imageURLs.contains(imageURL)) {
                     imageURLs.add(imageURL);
                 }
             }
         }
-		/*temp = temp.substring(temp.indexOf("<li><a href"),temp.lastIndexOf("</li>"));
-		
-
-		Matcher m = p.matcher(temp);
-		
-		while (m.find()) {
-			String imgName = m.group(1);
-			imageURLs.add(imgName);
-		}*/
-		
 		return imageURLs;
 	}
 

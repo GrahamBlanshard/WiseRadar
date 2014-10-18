@@ -104,7 +104,8 @@ public class AboutFragment extends Fragment {
 								    "along with this program.  If not, see http://www.gnu.org/licenses/.\n\n"+
                                 "PinchZoom and Scroll functionality has been provided as part of the PhotoView\n"+
                                     "project available on GitHub (https://github.com/chrisbanes/PhotoView)\n"+
-                                    "licensed under the Apache License v2.0. See documentation for details\n\n";
+                                    "licensed under the Apache License v2.0. See documentation for details\n\n" +
+                                "JSoup HTML Parsing provided by Jonathan Hedley (http://jsoup.org)\n\n";
             break;
         case ABOUT_APP_ID:
         	about = "WiseRadar is an open source mobile portal to view Environment Canada weather radar images. " +
@@ -113,10 +114,10 @@ public class AboutFragment extends Fragment {
         					   " be located online at https://github.com/GrahamBlanshard/WiseRadar\n\n";
             break;
         case ABOUT_LATEST:
-            about = "v2.0 (September 2014)\n" +
-                    "- Option to show current location on radar\n" +
-                    "- Numerous bug fixes\n" +
-                    "- More modern UI handling\n\n";
+            about = "v2.1 (October 2014)\n" +
+                    "- Fix to work with new Environment Canada Data\n" +
+                    "- Change to HTML parsing, now using JSoup\n" +
+                    "- Bug Fixes\n\n";
             break;
         default:
             about = "";

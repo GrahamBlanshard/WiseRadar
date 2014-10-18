@@ -1,7 +1,7 @@
 package wiseguys.radar.conn;
 
 import wiseguys.radar.R;
-import wiseguys.radar.RadarHelper;
+import wiseguys.radar.helpers.RadarHelper;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;

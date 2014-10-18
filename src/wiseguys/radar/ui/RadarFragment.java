@@ -96,7 +96,7 @@ public class RadarFragment extends Fragment {
         TextView warn = (TextView) activity.findViewById(R.id.locationWarning);
         TextView radarName = (TextView) activity.findViewById(R.id.radarName);
         ImageView sImage = (ImageView) activity.findViewById(R.id.radarImage);
-        String selectedRadarCode = sharedPrefs.getString("pref_radar_code", "new");
+        String selectedRadarCode = sharedPrefs.getString("pref_radar_code", "NAT");
         String codeToUse;
 
         //Verify we have a network
@@ -120,19 +120,18 @@ public class RadarFragment extends Fragment {
                 }
             }
         } else {
-            if (selectedRadarCode.equals("new")) {
+            if (selectedRadarCode.equals("NAT")) {
                 radarName.setText(getString(R.string.setPreferences));
-                ShowCanadaWide(sImage);
             }
         }
 
         String selectedDuration = sharedPrefs.getString("pref_radar_dur", "short");
-        String selectedRadarName = RadarHelper.codeToName(codeToUse, context);
+        String selectedRadarName = codeToUse.equals("NAT") ? getString(R.string.setPreferences) : RadarHelper.codeToName(codeToUse, context);
 
         //Error: Could not find radar code
         if (selectedRadarName == null) {
             radarName.setText(getString(R.string.noLocation));
-            ShowCanadaWide(sImage);
+            sImage.setImageResource(R.drawable.radar);
 
             return;
         }
@@ -182,17 +181,6 @@ public class RadarFragment extends Fragment {
         }
 
         return status;
-    }
-
-    /**
-     * Default state, Show the Canada Wide Radar when there's a fault no no preferences set
-     * @param sImage ImageView link to set
-     */
-    private void ShowCanadaWide(ImageView sImage) {
-        Bitmap canadaWide = RadarHelper.GetCanadaWideImage(getResources());
-        sImage.setImageBitmap(canadaWide);
-        updateAdapter(sImage);
-        return;
     }
 
     /**
