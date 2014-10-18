@@ -38,8 +38,9 @@ public class RadarFragment extends Fragment {
 
     private PhotoViewAttacher adapter;
 
-    private int screenWidth;
-    private int screenHeight;
+    public static int screenWidth;
+    public static int screenHeight;
+    public static float density;
 
 
 
@@ -78,7 +79,7 @@ public class RadarFragment extends Fragment {
             }
         }
 
-        getScreenSize();
+        getScreenMetrics();
         refresh();
     }
 
@@ -121,20 +122,17 @@ public class RadarFragment extends Fragment {
         } else {
             if (selectedRadarCode.equals("new")) {
                 radarName.setText(getString(R.string.setPreferences));
-                Bitmap canadaWide = RadarHelper.GetCanadaWideImage(getResources());
-                sImage.setImageBitmap(canadaWide);
-                updateAdapter(sImage);
-                return;
+                ShowCanadaWide(sImage);
             }
         }
-
 
         String selectedDuration = sharedPrefs.getString("pref_radar_dur", "short");
         String selectedRadarName = RadarHelper.codeToName(codeToUse, context);
 
+        //Error: Could not find radar code
         if (selectedRadarName == null) {
             radarName.setText(getString(R.string.noLocation));
-            sImage.setImageResource(R.drawable.radar);
+            ShowCanadaWide(sImage);
 
             return;
         }
@@ -144,7 +142,6 @@ public class RadarFragment extends Fragment {
         //Put it all together
         loader = new RadarLoader(context, this.getResources(), sImage, radarName);
         loader.execute(codeToUse, selectedDuration);
-
 
         ViewGroup.LayoutParams layoutParams = sImage.getLayoutParams();
 
@@ -160,7 +157,7 @@ public class RadarFragment extends Fragment {
         updateAdapter(sImage);
     }
 
-    private void getScreenSize() {
+    private void getScreenMetrics() {
         WindowManager winManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         Display display = winManager.getDefaultDisplay();
         DisplayMetrics point = new DisplayMetrics();
@@ -168,6 +165,7 @@ public class RadarFragment extends Fragment {
 
         screenWidth = point.widthPixels;
         screenHeight = point.heightPixels;
+        density = point.density;
     }
 
     private boolean validConnection() {
@@ -184,6 +182,17 @@ public class RadarFragment extends Fragment {
         }
 
         return status;
+    }
+
+    /**
+     * Default state, Show the Canada Wide Radar when there's a fault no no preferences set
+     * @param sImage ImageView link to set
+     */
+    private void ShowCanadaWide(ImageView sImage) {
+        Bitmap canadaWide = RadarHelper.GetCanadaWideImage(getResources());
+        sImage.setImageBitmap(canadaWide);
+        updateAdapter(sImage);
+        return;
     }
 
     /**
@@ -228,5 +237,4 @@ public class RadarFragment extends Fragment {
             gps.disable();
         }
     }
-
 }

@@ -7,6 +7,7 @@ import wiseguys.radar.helpers.GPSHelper;
 import wiseguys.radar.conn.ImageDownloaderThread;
 import wiseguys.radar.conn.SourceFetcherThread;
 import wiseguys.radar.helpers.RadarHelper;
+import wiseguys.radar.ui.RadarFragment;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -61,12 +62,12 @@ public class ImageFetcher {
 	 * @param code radar site code
 	 * @return true when an updated is required
 	 */
-	private boolean setupFetch(String code, String duration) {
+	private boolean setupFetch(String code) {
 		if (htmlFetch != null) {
 			//Skip update when we are looking at the same radar, or last attempt had failed
-            return !(htmlFetch.getCode().equals(code) && !failedPreviously) && getRadarFromConnection(code, duration);
+            return !(htmlFetch.getCode().equals(code) && !failedPreviously) && getRadarFromConnection(code);
 		}  else {			
-			return getRadarFromConnection(code,duration);
+			return getRadarFromConnection(code);
 		}
 	}
 	
@@ -75,10 +76,9 @@ public class ImageFetcher {
 	 * @param code radar code
 	 * @return true when we get a successful html download
 	 */
-	private boolean getRadarFromConnection(String code,String duration) {
+	private boolean getRadarFromConnection(String code) {
 		htmlFetch = new SourceFetcherThread();
 		htmlFetch.setCode(code);
-		htmlFetch.setDuration(duration);
 		htmlFetch.start();
 		
 		try {
@@ -97,7 +97,7 @@ public class ImageFetcher {
 		List<Bitmap> images = new ArrayList<Bitmap>();
 		List<String> radarImgUrls;
 		
-		if (!setupFetch(code,duration)) {
+		if (!setupFetch(code)) {
 			finished = true;
 
             if (code.equals(lastSuccessfulCode)) {
@@ -107,7 +107,7 @@ public class ImageFetcher {
             }
 		}
 				
-		radarImgUrls = RadarHelper.parseRadarImages(htmlFetch.getSource());
+		radarImgUrls = RadarHelper.parseRadarImages(htmlFetch.getSource(), duration, colours);
 		
 		//Source parsing failed; likely due to a lack of images provided from the host
 		if (radarImgUrls == null) {
@@ -117,8 +117,6 @@ public class ImageFetcher {
                 return null;
             }
 		}
-
-        radarImgUrls = changeDetail(radarImgUrls,colours);
 		
 		for (String imageURL : radarImgUrls) {
 			Bitmap newImage = getImage(imageURL);
@@ -147,7 +145,7 @@ public class ImageFetcher {
 	 * @return Bitmap of image from URL
 	 */
 	public Bitmap getImage(String URL) {
-		ImageDownloaderThread imgDown = new ImageDownloaderThread(RadarHelper.baseURL + URL);
+		ImageDownloaderThread imgDown = new ImageDownloaderThread(URL);
 		imgDown.start();
 		try {
 			imgDown.join();
@@ -185,9 +183,7 @@ public class ImageFetcher {
 	    	townImage = getTowns(selectedRadarCode);
 	    	overlays.add(townImage);
 	    } 
-	    if (showRadarCircles) {
-	    	overlays.add(radarCircles);
-	    }
+
 	    if (showTownsMore) {
 	    	townsMoreImage = getTownsMore(selectedRadarCode);
 	    	overlays.add(townsMoreImage);
@@ -201,8 +197,13 @@ public class ImageFetcher {
 	    	overlays.add(roadNumbersImage);
 	    }
 
+        //Note Circles always added last
+        if (showRadarCircles) {
+            overlays.add(radarCircles);
+        }
+
         if (overlays.size() > 0)
-	        return combine(overlays,showLocation,latestImages.get(0).getHeight());
+	        return combine(overlays,showLocation,latestImages.get(0).getHeight(),latestImages.get(0).getWidth(),showRadarCircles);
         else
             return Bitmap.createBitmap(latestImages.get(0).getHeight(),latestImages.get(0).getHeight(),Bitmap.Config.ARGB_8888);
 	}
@@ -212,11 +213,11 @@ public class ImageFetcher {
 	 * @param overlays Bitmaps to combine in order
 	 * @return a single Bitmap image
 	 */
-	private Bitmap combine(List<Bitmap> overlays, boolean showLocation, int size) {
+	private Bitmap combine(List<Bitmap> overlays, boolean showLocation, int vSize, int hSize, boolean showCircles) {
     	Bitmap image1;
         Canvas tempCanvas;
 
-        Bitmap newOverlay = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888);
+        Bitmap newOverlay = Bitmap.createBitmap(hSize, vSize, Bitmap.Config.ARGB_8888);
         tempCanvas = new Canvas(newOverlay);
 
         for (int i = 0; i < overlays.size(); i++) {
@@ -225,9 +226,15 @@ public class ImageFetcher {
             int w = overlay.getWidth();
             int h = overlay.getHeight();
 
-            if ( overlay.getWidth() > size || overlay.getHeight() > size ) {
+            if ( overlay.getWidth() > hSize || overlay.getHeight() > vSize ) {
                 Matrix m = new Matrix();
-                m.setScale( ((float)size / (float)overlay.getWidth()),( (float)size / (float)overlay.getHeight() ) );
+                if ( showCircles && i == overlays.size()-1 ) {
+                    //Special treatment for radar circles.
+                    m.setScale(((float) vSize / (float) overlay.getWidth()), ((float) vSize / (float) overlay.getHeight()));
+                } else {
+                    m.setScale(((float) hSize / (float) overlay.getWidth()), ((float) vSize / (float) overlay.getHeight()));
+                }
+
                 overlay = Bitmap.createBitmap(overlay, 0, 0, overlay.getWidth(), overlay.getHeight(), m, false);
             }
 
@@ -250,7 +257,7 @@ public class ImageFetcher {
      */
     private void drawGPS(Canvas canvas) {
         Paint p = new Paint();
-        float size = 4.0f * RadarHelper.density * 0.5f;
+        float size = 4.0f * RadarFragment.density * 0.5f;
 
         double lat = GPSHelper.lastGoodLat;
         double lng = GPSHelper.lastGoodLong;
@@ -333,51 +340,28 @@ public class ImageFetcher {
 	
 	private Bitmap getRoads(String code) {
     	//String roadImageURL = "/radar/images/layers/roads/" + code.toUpperCase() + "_roads.gif";
-		String roadImageURL = "/cacheable/images/radar/layers/roads/" + code.toUpperCase() + "_roads.gif";
+		String roadImageURL = RadarHelper.baseURL + "/cacheable/images/radar/layers/roads/" + code.toUpperCase() + "_roads.gif";
     	return imgFetch.getImage(roadImageURL);
     }
     
     private Bitmap getTowns(String code) {
-    	String townImageURL = "/cacheable/images/radar/layers/default_cities/" + code + "_towns.gif";
+    	String townImageURL = RadarHelper.baseURL + "/cacheable/images/radar/layers/default_cities/" + code + "_towns.gif";
     	return imgFetch.getImage(townImageURL);
     }
     
     private Bitmap getTownsMore(String code) {
-    	String townImageURL = "/cacheable/images/radar/layers/additional_cities/" + code + "_towns.gif";
+    	String townImageURL = RadarHelper.baseURL + "/cacheable/images/radar/layers/additional_cities/" + code + "_towns.gif";
     	return imgFetch.getImage(townImageURL);
     }
     
     private Bitmap getRoadNumbers(String code) {
-    	String roadNumURL = "/cacheable/images/radar/layers/road_labels/" + code + "_labs.gif";
+    	String roadNumURL = RadarHelper.baseURL + "/cacheable/images/radar/layers/road_labels/" + code + "_labs.gif";
     	return imgFetch.getImage(roadNumURL);
     }
     
     private Bitmap getRivers(String code) {
-    	String riverURL = "/cacheable/images/radar/layers/rivers/" + code + "_rivers.gif";
+    	String riverURL = RadarHelper.baseURL + "/cacheable/images/radar/layers/rivers/" + code + "_rivers.gif";
     	return imgFetch.getImage(riverURL);
-    }
-
-    private List<String> changeDetail(List<String> images, int colours) {
-        List<String> newList = new ArrayList<String>();
-        if (colours == 8) {
-            //"detailed"
-            for (String img : images) {
-                if (!img.contains("/detailed/")) {
-                    //Add detailed to URL
-                    img = img.replace("/radar/","/radar/detailed/");
-                }
-                newList.add(img);
-            }
-        } else {
-            for (String img : images) {
-                if (img.contains("/detailed/")) {
-                    //Remove detailed to URL
-                    img = img.replace("/detailed/","/");
-                }
-                newList.add(img);
-            }
-        }
-        return newList;
     }
     
     /**

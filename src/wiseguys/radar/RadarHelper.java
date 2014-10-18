@@ -13,6 +13,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
 
+import org.jsoup.nodes.Document;
+
 public class RadarHelper {
 	
 	public static final String baseURL = "http://weather.gc.ca";
@@ -53,30 +55,33 @@ public class RadarHelper {
 	 * @param code HTML code of page we're looking to parse
 	 * @return a collated collection of gif image names from the URL source
 	 */
-	public static List<String> parseRadarImages(String code) {
+	public static List<String> parseRadarImages(Document code) {
 		List<String> imageURLs = new ArrayList<String>();
-		
+
+
+
+        /*
 		if (!code.contains("image-list-ol")) {
 			return null;
 		}
-		
+
 		String temp = code.substring(code.indexOf("<ol class=\"image-list-ol\">"));
 		temp = temp.substring(0,temp.indexOf("</ol>"));
-		
+
 		//At times, the Env. Canada page does not have available data
-		if (!temp.contains("<li>")) {			
+		if (!temp.contains("<li>")) {
 			return null;
-		}	
-		
-		temp = temp.substring(temp.indexOf("<li><a href"),temp.lastIndexOf("</li>"));	
-		
+		}
+
+		temp = temp.substring(temp.indexOf("<li><a href"),temp.lastIndexOf("</li>"));
+
 		Pattern p = Pattern.compile("display=(.*GIF)&amp");
 		Matcher m = p.matcher(temp);
-		
+
 		while (m.find()) {
 			String imgName = m.group(1);
 			imageURLs.add(imgName);
-		}
+		}*/
 		
 		return imageURLs;
 	}
@@ -85,7 +90,7 @@ public class RadarHelper {
 		ImageDownloaderThread imgDown;
 		SourceFetcherThread fetcher = new SourceFetcherThread();
 		fetcher.setBaseFetch();		
-		String basicSource;
+		Document basicSource;
 
 		try {
 			fetcher.start();
