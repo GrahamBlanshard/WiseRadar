@@ -114,10 +114,8 @@ public class AboutFragment extends Fragment {
         					   " be located online at https://github.com/GrahamBlanshard/WiseRadar\n\n";
             break;
         case ABOUT_LATEST:
-            about = "v2.1 (October 2014)\n" +
-                    "- Fix to work with new Environment Canada Data\n" +
-                    "- Change to HTML parsing, now using JSoup\n" +
-                    "- Bug Fixes\n\n";
+            about = "v2.2 (November 2014)\n" +
+                    "- Reduced battery usage\n\n";
             break;
         default:
             about = "";

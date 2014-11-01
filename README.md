@@ -18,7 +18,7 @@ Code made available free online for all interested users.
 
 NOTE: As per agreement with WeatherOffice.gc.ca all data used within this app is used for NON-COMMERCIAL USES ONLY.
 
-Copyright (C) 2013  Graham Blanshard
+Copyright (C) 2014  Graham Blanshard
 
     This program is free software: you can redistribute it and/or modify  
     it under the terms of the GNU General Public License as published by  

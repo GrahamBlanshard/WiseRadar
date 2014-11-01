@@ -84,6 +84,12 @@ public class RadarFragment extends Fragment {
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        gps.disable();
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         cleanupAdapter();

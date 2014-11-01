@@ -97,14 +97,6 @@ public class MainActivity extends Activity {
         return true;
     }
 
-    /**
-     * Activity Pause -- Cancel any updates and disable GPS
-     */
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
-
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
