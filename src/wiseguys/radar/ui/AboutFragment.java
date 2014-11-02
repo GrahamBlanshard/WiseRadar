@@ -86,8 +86,9 @@ public class AboutFragment extends Fragment {
         TextView authorButton = (TextView) activity.findViewById(R.id.about_text);
         switch(id) {
         case ABOUT_AUTHOR_ID:
-        	about = "All app programming by Graham Blanshard\n\n   http://www.pro-graham.com/\n   graham.blanshard@gmail.com\n\nIf you have any questions or would like to see any features " +
-        	"please contact me at one of these locations.\n\nPinchZoom and Scroll functions (added v1.2) are provided by the PhotoView project by Chris Banes\n\n";
+        	about = "App programming by Graham Blanshard\n\n   http://www.pro-graham.com/\n   graham.blanshard@gmail.com\n\nIf you have any questions or would like to see any features " +
+        	"please contact me at one of these locations.\n\nPinchZoom and Scroll functions (added v1.2) are provided by the PhotoView project by Chris Banes\n\n" +
+            "Special thanks to github.com/krt16s for patching build files\n\n";
             break;
         case ABOUT_LICENSE_ID:
         	//http://opensource.org/licenses/GPL-3.0
