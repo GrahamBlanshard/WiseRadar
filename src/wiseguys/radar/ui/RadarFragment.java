@@ -86,7 +86,8 @@ public class RadarFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        gps.disable();
+        if (gps != null && gps.ready())
+            gps.disable();
     }
 
     @Override

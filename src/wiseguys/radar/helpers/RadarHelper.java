@@ -75,7 +75,8 @@ public class RadarHelper {
             Log.e("WiseRadar",e.getMessage());
         }
 
-        Pattern p = Pattern.compile("display='(.*)'");
+        Pattern p = Pattern.compile("display='(([A-Z]{3})_[A-Z_]*_[0-9]{4}(_[0-9]{2})+)'");
+        //Future: Can use this regex to extract image datetime
 
         //Should always be 15 long. First 6 are "Short" last 9 are "Long"
         int count = (duration.equals("long") ? 15 : 6);
@@ -87,7 +88,7 @@ public class RadarHelper {
 
             while (m.find()) {
                 String image = m.group(1);
-                String prefix = image.substring(0,image.indexOf("_PRECIP"));
+                String prefix = m.group(2);
                 String imageURL = (depth == 14 ? RadarHelper.c14ImageURL : RadarHelper.c8ImageURL) + prefix + "/" + image + ".GIF";
 
                 if (!imageURLs.contains(imageURL)) {
