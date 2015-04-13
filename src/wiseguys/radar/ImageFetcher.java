@@ -205,7 +205,7 @@ public class ImageFetcher {
         if (overlays.size() > 0)
             return combine(overlays,showLocation,latestImages.get(0).getHeight(),latestImages.get(0).getWidth(),showRadarCircles);
         else
-            return Bitmap.createBitmap(latestImages.get(0).getHeight(),latestImages.get(0).getHeight(),Bitmap.Config.ARGB_8888);
+            return null;
     }
 
     /**
