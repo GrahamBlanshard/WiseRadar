@@ -73,6 +73,7 @@ public class RadarHelper {
             }
         } catch ( Exception e ) {
             Log.e("WiseRadar",e.getMessage());
+            return null;
         }
 
         Pattern p = Pattern.compile("display='(([A-Z]{3})_[A-Z_]*_[0-9]{4}(_[0-9]{2})+)'");
