@@ -160,9 +160,9 @@ public class ImageFetcher {
         List<Bitmap> overlays = new ArrayList<Bitmap>();
 
         //Fetch our overlay preferences
-        Boolean showRoads = sharedPrefs.getBoolean("roads",false);
-        Boolean showTowns = sharedPrefs.getBoolean("towns",false);
-        Boolean showRadarCircles = sharedPrefs.getBoolean("circles",false);
+        Boolean showRoads = sharedPrefs.getBoolean("roads",true);
+        Boolean showTowns = sharedPrefs.getBoolean("towns",true);
+        Boolean showRadarCircles = sharedPrefs.getBoolean("circles",true);
         Boolean showRoadNumbers = sharedPrefs.getBoolean("roadNums",false);
         Boolean showTownsMore = sharedPrefs.getBoolean("addTowns",false);
         Boolean showRivers = sharedPrefs.getBoolean("rivers",false);
