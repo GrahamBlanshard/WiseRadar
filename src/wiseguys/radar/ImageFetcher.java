@@ -202,7 +202,7 @@ public class ImageFetcher {
             overlays.add(radarCircles);
         }
 
-        if (overlays.size() > 0)
+        if (overlays.size() > 0 && latestImages.size() > 0)
             return combine(overlays,showLocation,latestImages.get(0).getHeight(),latestImages.get(0).getWidth(),showRadarCircles);
         else
             return null;
