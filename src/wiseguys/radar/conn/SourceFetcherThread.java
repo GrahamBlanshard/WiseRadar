@@ -36,7 +36,7 @@ public class SourceFetcherThread extends Thread {
 	public void run() {
 		if (code != null || getBaseImage) {
 
-            String envURL = RadarHelper.baseURL;
+			String envURL = RadarHelper.baseURL;
 
             //Get a specific radar code
             envURL += "/radar/index_e.html?id=";

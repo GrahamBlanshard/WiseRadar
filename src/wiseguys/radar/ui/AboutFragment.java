@@ -92,7 +92,7 @@ public class AboutFragment extends Fragment {
             break;
         case ABOUT_LICENSE_ID:
         	//http://opensource.org/licenses/GPL-3.0
-        	about = "Copyright (C) 2014 Graham Blanshard\n\n" +
+        	about = "Copyright (C) 2015 Graham Blanshard\n\n" +
         						"This program is free software: you can redistribute it and/or modify\n"+
 								    "it under the terms of the GNU General Public License as published by\n"+
 								    "the Free Software Foundation, either version 3 of the License, or\n"+
@@ -115,7 +115,7 @@ public class AboutFragment extends Fragment {
         					   " be located online at https://github.com/GrahamBlanshard/WiseRadar\n\n";
             break;
         case ABOUT_LATEST:
-            about = "v2.4 (??? 2015)\n" +
+            about = "v2.3.1 (Nov 2015)\n" +
                     "- Crash fixes\n\n";
             break;
         default:

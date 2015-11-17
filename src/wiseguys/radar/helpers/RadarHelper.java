@@ -79,10 +79,7 @@ public class RadarHelper {
         Pattern p = Pattern.compile("display='(([A-Z]{3})_[A-Z_]*_[0-9]{4}(_[0-9]{2})+)'");
         //Future: Can use this regex to extract image datetime
 
-        //Should always be 15 long. First 6 are "Short" last 9 are "Long"
-        int count = (duration.equals("long") ? 15 : 6);
-
-        for (int i = 0; i < count; i++) {
+        for (int i = 0; i < imageList.size(); i++) {
             Element e = imageList.get(i);
             String contents = e.attributes().get("href");
             Matcher m = p.matcher(contents);
