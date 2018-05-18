@@ -172,12 +172,13 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener, Vers
 	 * Clean-up the resources attached to this object. This needs to be called
 	 * when the ImageView is no longer used. A good example is from
 	 * {@link android.view.View#onDetachedFromWindow()} or from {@link android.app.Activity#onDestroy()}.
-	 * This is automatically called if you are using {@link uk.co.senab.photoview.PhotoView}.
 	 */
 	@SuppressWarnings("deprecation")
 	public final void cleanup() {
 		if (null != mImageView) {
-			mImageView.get().getViewTreeObserver().removeGlobalOnLayoutListener(this);
+			if (null != mImageView.get()) {
+				mImageView.get().getViewTreeObserver().removeGlobalOnLayoutListener(this);
+			}
 		}
 		mViewTreeObserver = null;
 
@@ -206,8 +207,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener, Vers
 		// If we don't have an ImageView, call cleanup()
 		if (null == imageView) {
 			cleanup();
-			throw new IllegalStateException(
-					"ImageView no longer exists. You should not use this PhotoViewAttacher any more.");
+			//throw new IllegalStateException("ImageView no longer exists. You should not use this PhotoViewAttacher any more.");
 		}
 
 		return imageView;

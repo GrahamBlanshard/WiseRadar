@@ -42,13 +42,15 @@
         </PreferenceCategory>
     	<PreferenceCategory android:title="Overlays">
     		<CheckBoxPreference android:title="Show Roads"
-    					android:key="roads">
+    					android:key="roads"
+						android:defaultValue="true">
     		</CheckBoxPreference>
     		<CheckBoxPreference android:title="Show Road Numbers"
     					android:key="roadNums">
     		</CheckBoxPreference>
     		<CheckBoxPreference android:title="Show Towns"
-    					android:key="towns">
+    					android:key="towns"
+						android:defaultValue="true">
     		</CheckBoxPreference>
     		<CheckBoxPreference android:title="Show Additional Towns"
     					android:key="addTowns">
@@ -57,7 +59,8 @@
     					android:key="rivers">
     		</CheckBoxPreference>
     		<CheckBoxPreference android:title="Show Radar Circles"
-    					android:key="circles">
+    					android:key="circles"
+						android:defaultValue="true">
     		</CheckBoxPreference>    		
     	</PreferenceCategory>
 </PreferenceScreen>

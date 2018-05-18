@@ -86,13 +86,13 @@ public class AboutFragment extends Fragment {
         TextView authorButton = (TextView) activity.findViewById(R.id.about_text);
         switch(id) {
         case ABOUT_AUTHOR_ID:
-        	about = "App programming by Graham Blanshard\n\n   http://www.pro-graham.com/\n   graham.blanshard@gmail.com\n\nIf you have any questions or would like to see any features " +
+        	about = "App programming by Graham Blanshard\n\n   http://www.pro-graham.com/\n   graham@pro-graham.com\n\nIf you have any questions or would like to see any features " +
         	"please contact me at one of these locations.\n\nPinchZoom and Scroll functions (added v1.2) are provided by the PhotoView project by Chris Banes\n\n" +
             "Special thanks to github.com/krt16s for patching build files\n\n";
             break;
         case ABOUT_LICENSE_ID:
         	//http://opensource.org/licenses/GPL-3.0
-        	about = "Copyright (C) 2015 Graham Blanshard\n\n" +
+        	about = "Copyright (C) 2017 Graham Blanshard\n\n" +
         						"This program is free software: you can redistribute it and/or modify\n"+
 								    "it under the terms of the GNU General Public License as published by\n"+
 								    "the Free Software Foundation, either version 3 of the License, or\n"+
@@ -105,18 +105,22 @@ public class AboutFragment extends Fragment {
 								    "along with this program.  If not, see http://www.gnu.org/licenses/.\n\n"+
                                 "PinchZoom and Scroll functionality has been provided as part of the PhotoView\n"+
                                     "project available on GitHub (https://github.com/chrisbanes/PhotoView)\n"+
-                                    "licensed under the Apache License v2.0. See documentation for details\n\n" +
-                                "JSoup HTML Parsing provided by Jonathan Hedley (http://jsoup.org)\n\n";
+                                    "licensed under the Apache License v2.0. See documentation for details\n\n";
             break;
         case ABOUT_APP_ID:
         	about = "WiseRadar is an open source mobile portal to view Environment Canada weather radar images. " +
-        					   "\nAll radar imagry is provided free on behalf of Environment Canada for non-commercial uses. If you wish to know more about Environment" +
-        					   " Canada, the radar images, or the use of this data please visit their website:\n\n"+RadarHelper.baseURL+"\n\nThis app's source code can "+
-        					   " be located online at https://github.com/GrahamBlanshard/WiseRadar\n\n";
+                       "\nAll radar imagry is provided free on behalf of Environment Canada for non-commercial uses. If you wish to know more about Environment" +
+                       " Canada, the radar images, or the use of this data please visit their website:\n\n"+RadarHelper.baseURL+"\n\nThis app's source code can "+
+                       " be located online at https://github.com/GrahamBlanshard/WiseRadar\n\n";
             break;
         case ABOUT_LATEST:
-            about = "v2.3.1 (Nov 2015)\n" +
-                    "- Crash fixes\n\n";
+            about = "v2.4.0 (Aug/Sept 2017)\n" +
+                    "- Reduced Bandwidth usage\n" +
+                    "- Improved zoom functionality\n" +
+                    "- Much needed stability improvements\n" +
+                    "- Battery improvements (Loosed up the GPS reliance)" +
+                    "- Refreshing... actually refreshes! Maybe. Sometimes.\n" +
+                    "     ...I mostly just wanted Environment Canada to stop changing their code";
             break;
         default:
             about = "";

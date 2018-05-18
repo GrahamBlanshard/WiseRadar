@@ -78,6 +78,10 @@ public class GPSHelper {
                     RadarHelper.latestLocation = location;
                     lastGoodLat = lastKnownLocation.getLatitude();
                     lastGoodLong = lastKnownLocation.getLongitude();
+
+					//We're disabling the listener after getting a good read. No point holding onto it until next request
+					locationManager.removeUpdates(locationListener);
+					GPSSetup = false;
 		    	}
 		    }
 
@@ -128,18 +132,7 @@ public class GPSHelper {
 
 	    //Check times
 	    long timeDelta = location.getTime() - lastKnownLocation.getTime();
-	    boolean isSignificantlyNewer = timeDelta > RadarHelper.TEN_MINUTES;
-	    boolean isSignificantlyOlder = timeDelta < -RadarHelper.TEN_MINUTES;
 	    boolean isNewer = timeDelta > 0;
-
-	    // If it's been more than two minutes since the current location, use the new location
-	    // because the user has likely moved
-	    if (isSignificantlyNewer) {
-	        return true;
-	    // If the new location is more than two minutes older, it must be worse
-	    } else if (isSignificantlyOlder) {
-	        return false;
-	    }
 
 	    // Check whether the new location fix is more or less accurate
 	    int accuracyDelta = (int) (location.getAccuracy() - lastKnownLocation.getAccuracy());
@@ -170,6 +163,7 @@ public class GPSHelper {
 		if (!GPSSetup) {
 			setup();
 		}
+
 		return GPSSetup;
 	}
 

@@ -55,7 +55,17 @@ public class MainActivity extends Activity {
                         .commit();
                 return true;
             case R.id.menu_refresh:
-                radarFragment.refresh();
+                RadarFragment radar_fragment = (RadarFragment)getFragmentManager().findFragmentByTag("radar_fragment");
+                if (!radar_fragment.isVisible()) {
+                    getFragmentManager().beginTransaction()
+                            .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
+                            .replace(R.id.main_container, radar_fragment, "radar_fragment")
+                            .addToBackStack(null)
+                            .commit();
+                } else {
+                    radarFragment.refresh();
+                }
+
                 return true;
             case R.id.menu_preferences:
                 //Show preferences

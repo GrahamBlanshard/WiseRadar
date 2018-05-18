@@ -22,7 +22,7 @@ import android.location.Location;
 public class ImageFetcher {
 
     private static ImageFetcher imgFetch;
-    private SourceFetcherThread htmlFetch;
+    private SourceFetcherThread srcFetch;
     private List<Bitmap> latestImages = null;
     private boolean finished;
     private boolean failedPreviously;
@@ -58,59 +58,31 @@ public class ImageFetcher {
     }
 
     /**
-     * Checks and executes the code download if necessary
-     * @param code radar site code
-     * @return true when an updated is required
+     * Retrieve a full list of Radar Images
+     * @param code Weather.ca 3-letter radar code
+     * @param detailed_colours whether to fetch detailed images or basic
+     * @return List of bitmaps matching the given parameters
      */
-    private boolean setupFetch(String code) {
-        if (htmlFetch != null) {
-            //Skip update when we are looking at the same radar, or last attempt had failed
-            return !(htmlFetch.getCode().equals(code) && !failedPreviously) && getRadarFromConnection(code);
-        }  else {
-            return getRadarFromConnection(code);
-        }
-    }
-
-    /**
-     * Downloads the Radar data using a thread.
-     * @param code radar code
-     * @return true when we get a successful html download
-     */
-    private boolean getRadarFromConnection(String code) {
-        htmlFetch = new SourceFetcherThread();
-        htmlFetch.setCode(code);
-        htmlFetch.start();
-
-        try {
-            htmlFetch.join();
-        } catch (InterruptedException e) {
-            failedPreviously = true;
-            return false;
-        }
-
-        return true;
-    }
-
-    public List<Bitmap> getRadarImages(String code, String duration, int colours) {
-
+    public List<Bitmap> getRadarImages(String code, boolean detailed_colours) {
         finished = false;
         List<Bitmap> images = new ArrayList<Bitmap>();
-        List<String> radarImgUrls;
+        List<RadarImage> radarImgObjs;
 
-        if (!setupFetch(code)) {
+        if (!getRadarFromConnection(code)) {
+            //In event of failure, skip processing and return previous data (assuming we have any)
             finished = true;
 
             if (code.equals(lastSuccessfulCode)) {
                 return latestImages;
             } else {
+                //We have no previous data. Send back some default!
                 return null;
             }
         }
 
-        radarImgUrls = RadarHelper.parseRadarImages(htmlFetch.getSource(), duration, colours);
-
-        //Source parsing failed; likely due to a lack of images provided from the host
-        if (radarImgUrls == null) {
+        radarImgObjs = srcFetch.getNewImages();
+        if (radarImgObjs == null) {
+            //Source parsing failed; likely due to a lack of images provided from the host
             if (code.equals(lastSuccessfulCode)) {
                 return latestImages;
             } else {
@@ -118,8 +90,8 @@ public class ImageFetcher {
             }
         }
 
-        for (String imageURL : radarImgUrls) {
-            Bitmap newImage = getImage(imageURL);
+        for (RadarImage image : radarImgObjs) {
+            Bitmap newImage = getImage(RadarHelper.baseURL + (detailed_colours ? image.getSrc() : image.getSrcDetailed()));
 
             if (newImage == null) {
                 if (code.equals(lastSuccessfulCode)) {
@@ -137,6 +109,26 @@ public class ImageFetcher {
         latestImages = images;
         lastSuccessfulCode = code;
         return images;
+    }
+
+    /**
+     * Downloads the Radar data using a thread.
+     * @param code radar code
+     * @return true when we get a successful html download
+     */
+    private boolean getRadarFromConnection(String code) {
+        srcFetch = new SourceFetcherThread();
+        srcFetch.setCode(code);
+        srcFetch.start();
+
+        try {
+            srcFetch.join();
+        } catch (InterruptedException e) {
+            failedPreviously = true;
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -223,19 +215,21 @@ public class ImageFetcher {
         for (int i = 0; i < overlays.size(); i++) {
             Bitmap overlay = overlays.get(i);
 
+            if ( overlay == null ) { continue; }
+
             int w = overlay.getWidth();
             int h = overlay.getHeight();
 
-            if ( overlay.getWidth() > hSize || overlay.getHeight() > vSize ) {
+            if ( w > hSize || h > vSize ) {
                 Matrix m = new Matrix();
                 if ( showCircles && i == overlays.size()-1 ) {
                     //Special treatment for radar circles.
-                    m.setScale(((float) vSize / (float) overlay.getWidth()), ((float) vSize / (float) overlay.getHeight()));
+                    m.setScale(((float) vSize / (float) w), ((float) vSize / (float) h));
                 } else {
-                    m.setScale(((float) hSize / (float) overlay.getWidth()), ((float) vSize / (float) overlay.getHeight()));
+                    m.setScale(((float) hSize / (float) w), ((float) vSize / (float) h));
                 }
 
-                overlay = Bitmap.createBitmap(overlay, 0, 0, overlay.getWidth(), overlay.getHeight(), m, false);
+                overlay = Bitmap.createBitmap(overlay, 0, 0, w, h, m, false);
             }
 
             tempCanvas.drawBitmap( fixBackground(overlay), 0, 0, null);
@@ -309,10 +303,10 @@ public class ImageFetcher {
 
         int colour = pixels[0];
 
-        if (htmlFetch.getCode().equals("xbu") ||
-                htmlFetch.getCode().equals("wkr") ||
-                htmlFetch.getCode().equals("wmn") ||
-                htmlFetch.getCode().equals("wtp")) {
+        if (srcFetch.getCode().equals("xbu") ||
+            srcFetch.getCode().equals("wkr") ||
+            srcFetch.getCode().equals("wmn") ||
+            srcFetch.getCode().equals("wtp")) {
             /*
             Special case scenarios --
                 Radar Overlays use different transparent values in top corner

@@ -3,10 +3,20 @@ package wiseguys.radar.conn;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.HttpResponseException;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.entity.BufferedHttpEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
 
 public class ImageDownloaderThread extends Thread {
 
@@ -30,14 +40,18 @@ public class ImageDownloaderThread extends Thread {
 	 */
 	public void run() {
 		try {
-	        URL url = new URL(Url); //you can write here any link
-	        HttpURLConnection ucon = (HttpURLConnection)url.openConnection();
-	        InputStream is = ucon.getInputStream();
-	        
-	        image = BitmapFactory.decodeStream(is);
-	        
-	        is.close();	                
-		} catch (IOException e) { }
+			HttpGet hgr = new HttpGet(URI.create(Url));
+			HttpClient hc = new DefaultHttpClient();
+			HttpResponse r = (HttpResponse)hc.execute(hgr);
+			HttpEntity e = r.getEntity();
+			BufferedHttpEntity nhe = new BufferedHttpEntity(e);
+
+			image = BitmapFactory.decodeStream(nhe.getContent());
+			hgr.abort();
+		} catch (IOException e) {
+			e.printStackTrace();
+			image = null;
+		}
 
 	}
 
