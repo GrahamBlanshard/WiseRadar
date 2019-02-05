@@ -86,7 +86,7 @@ public class SourceFetcherThread extends Thread {
 
                         rawSrc.close();
                         /*
-                           http://weather.gc.ca/radar/xhr.php?
+                           https://weather.gc.ca/radar/xhr.php?
                             action=retrieve&
                             target=images&
                             region=__CODE___&

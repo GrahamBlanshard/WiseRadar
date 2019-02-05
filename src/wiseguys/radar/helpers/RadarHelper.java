@@ -6,10 +6,10 @@ import android.location.Location;
 
 public class RadarHelper {
 	
-	public static final String baseURL = "http://weather.gc.ca"; 	//http://weather.gc.ca/radar/index_e.html?id=<CODE>
+	public static final String baseURL = "https://weather.gc.ca"; 	//https://weather.gc.ca/radar/index_e.html?id=<CODE>
     public static Location latestLocation;
 
-    public static final String jsonURLRaw = "http://weather.gc.ca/radar/xhr.php?action=retrieve&target=images&region=%s&format=json";
+    public static final String jsonURLRaw = "https://weather.gc.ca/radar/xhr.php?action=retrieve&target=images&region=%s&format=json";
 
     public static final int TEN_MINUTES = 60000;
 
